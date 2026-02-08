@@ -2,29 +2,27 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useForecast } from "../context/ForecastContext";
 import { pronosticos } from "../data/pronosticos";
+import { replaceFunction } from "../hooks/useAAAListener";
 
 export default function RenderPronostico() {
-  const { tipoDePronostico, fechaInicio, fechaFin, username, contenido } = useForecast();
+  const { tipoDePronostico, fechaInicio, fechaFin, username, contenido, selected } = useForecast();
   const [open, setOpen] = useState(false);
-
-  const pronosticoActual = pronosticos[tipoDePronostico] || pronosticos.marino;
+  
+  const pronosticoActual = pronosticos[tipoDePronostico][selected] || pronosticos.marino[selected];
 
   // Encabezado
-  const encabezado = pronosticoActual.encabezado
-    .replace("{fechaInicio}", fechaInicio.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }))
-    .replace("{fechaFin}", fechaFin.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }))
-    .toUpperCase();
+  const encabezado = replaceFunction(pronosticoActual.encabezado, fechaInicio, fechaFin)
 
   // Zonas: nombre en negrita, texto normal
   const zonasTexto = pronosticoActual.zonas.map((z) => {
     const bloque = z.nameBloqueInclude ? (
-      <p key={`${z.contenidoKey}-bloque`} className="text-[12px] font-bold uppercase mt-4 mb-2">
+      <p key={`${z.contenidoKey}-bloque`} className="text-[12px] font-bold mt-1">
         {z.bloque}:
       </p>
     ) : null;
 
     const nombre = (
-      <p key={`${z.contenidoKey}-nombre`} className="text-[12px] font-bold uppercase mb-1">
+      <p key={`${z.contenidoKey}-nombre`} className="text-[12px] font-bold  mb-1">
         {z.nombre}
       </p>
     );
@@ -41,7 +39,7 @@ export default function RenderPronostico() {
         {nombre}
         {texto}
       </div>
-    );
+      );
   });
 
   // Firma
@@ -69,22 +67,30 @@ export default function RenderPronostico() {
         createPortal(
           <div className="fixed top-0 left-0 w-[100vw] h-[100vh] z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm">
             {/* Contenedor A4 */}
-            <div className="bg-white w-[21cm] h-[29.7cm] overflow-y-auto rounded-lg shadow-2xl p-[2.5cm] font-[Arial] text-justify">
-              
+            <div className="bg-white w-[21cm] max-h-[100vh] overflow-auto rounded-lg shadow-2xl p-[2.5cm] font-[Arial] flex flex-col items-center justify-start text-justify">  
+      
               {/* Logo centrado */}
                     <div className="flex justify-center mb-2">
             <img src="maritimaLogo.png" alt="Logo de CMM" className="h-full" />
             </div>
 
               {/* Encabezado */}
-              <p className="text-[14px] font-bold uppercase mb-4">
+              {pronosticoActual.insertGuion && (
+              <p className="text-[14px] font-bold uppercase leading-tight">
                 {encabezado.slice(0,-105)}
-                <br />
-                {`${encabezado.slice(-104).trim()}------------------------------`}
+                <span className="leading-none block">
+                {`${encabezado.slice(-104).trim()}---------------------------`}
+                </span>
+              </p>)}
+
+              {!pronosticoActual.insertGuion &&(
+                 <p className="text-[14px] font-bold uppercase leading-tight whitespace-pre-wrap">
+                {encabezado}                
               </p>
+              )}
 
               {/* Zonas */}
-              <div className="leading-relaxed whitespace-pre-wrap">
+              <div className="leading-relaxed whitespace-pre-wrap w-[100%]">
                 {zonasTexto}
               </div>
 

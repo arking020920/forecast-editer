@@ -1,36 +1,24 @@
-import { useEffect } from "react";
-
-export default function useAAAListener({
-  contenido,
-  setContenido,
-  zonas,
-  currentZone,
-  openModal,
-}) {
-  useEffect(() => {
-    let buffer = "";
-
-    const handleKeyDown = (e) => {
-      buffer += e.key;
-      if (buffer.length > 3) buffer = buffer.slice(-3);
-
-      if (buffer === "aaa") {
-        const key = zonas[currentZone];
-        const actual = contenido[key] || "";
-
-        // 👇 borra las tres letras "aaa" al final del texto
-        const nuevo = actual.endsWith("aaa")
-          ? actual.slice(0, -3)
-          : actual;
-
-        setContenido({ ...contenido, [key]: nuevo });
-
-        openModal(); // abre el modal
-        buffer = "";
+import { TextRun } from "docx";
+export const replaceFunction = (texto, fechaInicio, fechaFin)=>{
+      const newTexto = texto.replace("{fechaInicio}", fechaInicio.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }))
+      .replace("{fechaFin}", fechaFin.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }))
+      .replace("{dayNumber}", `${fechaInicio.getDate()}`)
+      .replace("{day0Number}", fechaInicio.getDate()<10 ? `0${fechaInicio.getDate()}` : `${fechaInicio.getDate()}`)
+      .replace("{month0Number}", fechaInicio.getMonth() + 1 <10 ? `0${fechaInicio.getMonth()}` : `${fechaInicio.getMonth()}`)
+      .replace("{monthNumber}", `${fechaInicio.getMonth() + 1}`)
+      .replace("{yearNumber}", `${fechaInicio.getFullYear()}`);
+      return newTexto
       }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [contenido, setContenido, zonas, currentZone, openModal]);
+export const separadorSaltoDeLinea =(encabezado, objectInfo,type, negrita=true)=>{
+  const fuente = type + 'FontSize'
+  let textValue = encabezado.split("\n").map((linea, i) =>
+  new TextRun({
+    text: linea.trim(),
+    bold: negrita,
+    font: "Arial",
+    size: objectInfo[fuente] * 2,
+    break: i > 0, // 👈 añade salto de línea a partir de la segunda línea
+  })
+)
+  return textValue
 }

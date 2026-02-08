@@ -4,9 +4,8 @@ import { useForecast } from "../context/ForecastContext";
 import { pronosticos } from "../data/pronosticos";
 
 export default function ForecastModal({ onClose }) {
-  const { setTipoDePronostico } = useForecast();
+  const { setTipoDePronostico, tipoDePronostico, selected, setSelected, pronosticoDatabase, setContenido, contenido, setCurrentZone } = useForecast();
   const [visible, setVisible] = useState(false);
-  const [selected, setSelected] = useState(null);
 
   // Animación de entrada
   useEffect(() => {
@@ -30,17 +29,17 @@ export default function ForecastModal({ onClose }) {
 
         {/* Lista de pronósticos */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow overflow-y-auto mb-6">
-          {Object.keys(pronosticos).map((key) => (
+          {pronosticos[tipoDePronostico].map((key, index) => (
             <button
-              key={key}
-              onClick={() => setSelected(key)}
+              key={index}
+              onClick={() => setSelected(key.id)}
               className={`p-4 rounded-lg shadow-md text-left font-medium transition ${
-                selected === key
+                selected === key.id
                   ? "bg-blue-500 text-white"
                   : "bg-gradient-to-r from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300 text-gray-700"
               }`}
             >
-              {pronosticos[key].titulo}
+              {pronosticos[tipoDePronostico][index].titulo}
             </button>
           ))}
         </div>
@@ -48,14 +47,16 @@ export default function ForecastModal({ onClose }) {
         {/* Botón continuar */}
         <button
           onClick={() => {
-            if (selected) {
-              setTipoDePronostico(selected); // guardamos el pronóstico elegido en el contexto
+            if (Number(selected+1) ) {
+              setContenido(pronosticoDatabase[selected])
+              setCurrentZone(0)
+              console.log('el contenido',contenido)
               onClose(); // cerramos el modal
             }
           }}
-          disabled={!selected}
+          disabled={!Number(selected+1)}
           className={`w-full py-3 rounded-lg font-semibold transition ${
-            selected
+            Number(selected+1)
               ? "bg-green-600 text-white hover:bg-green-700"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}

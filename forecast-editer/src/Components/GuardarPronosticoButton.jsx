@@ -1,38 +1,50 @@
-import { Document, Packer, Paragraph, TextRun, AlignmentType, ImageRun } from "docx";
+import { Document, Packer, Paragraph, TextRun, AlignmentType, ImageRun, VerticalAlignSection } from "docx";
 import { saveAs } from "file-saver";
 import { useForecast } from "../context/ForecastContext";
 import { pronosticos } from "../data/pronosticos";
-
+import { replaceFunction, separadorSaltoDeLinea } from "../hooks/useAAAListener";
 export default function GuardarPronosticoButton() {
-  const { tipoDePronostico, fechaInicio, fechaFin, username, contenido } = useForecast();
-  const pronosticoActual = pronosticos[tipoDePronostico] || pronosticos.marino;
+  const { tipoDePronostico, fechaInicio, fechaFin, username, contenido, selected, guardarPronostico } = useForecast();
+  const pronosticoActual = pronosticos[tipoDePronostico][selected] || pronosticos.marino[selected];
+
+  
 
   const handleGuardar = async () => {
     // Cargar imagen desde public
+    guardarPronostico()
     const response = await fetch("/maritimaLogo.png");
     const logoBuffer = await response.arrayBuffer();
+    const objectInfo = pronosticoActual.objectInfo
+
+    function normalizarGuiones(texto, longitud = 112) {
+  // Expresión regular: busca secuencias de 3 o más guiones seguidos
+  return texto.replace(/-{3,}/g, "-".repeat(longitud));
+}
+
 
     // Encabezado
-    const encabezado = pronosticoActual.encabezado
-      .replace("{fechaInicio}", fechaInicio.toLocaleDateString("es-ES"))
-      .replace("{fechaFin}", fechaFin.toLocaleDateString("es-ES"))
-      .toUpperCase().slice(0, -105);
-
+    let encabezado = pronosticoActual.encabezado  
+    encabezado = replaceFunction(encabezado, fechaInicio, fechaFin)
+      const notisHombresDelMar = pronosticoActual.id != 0
+      encabezado = notisHombresDelMar ? encabezado : encabezado.slice(0,-105).toUpperCase()
+      encabezado = normalizarGuiones(encabezado)
+      const encabezadoRuns = separadorSaltoDeLinea(encabezado, objectInfo, 'encabezado')
+  
     // Zonas
     const zonas = pronosticoActual.zonas.map((z) => {
       const bloque = z.nameBloqueInclude
         ? new Paragraph({
             alignment: AlignmentType.JUSTIFIED,
             indent: { left: 0 }, // 👈 sin sangría
-            children: [new TextRun({ text: `${z.bloque.toUpperCase()}:`, bold: true, font: "Arial", size: 24 })],
+            children: [new TextRun({ text: `${z.bloque}:`, bold: true, font: "Arial", size: 24 })],
             spacing: { before: 0, after: 0 },
           })
         : null;
-
+      const nombreSeparado = separadorSaltoDeLinea(z.nombre, objectInfo, 'zonas')
       const nombre = new Paragraph({
-        alignment: AlignmentType.JUSTIFIED,
+        alignment: AlignmentType.START,
         indent: { left: 0 }, // 👈 sin sangría
-        children: [new TextRun({ text: z.nombre.toUpperCase(), bold: true, font: "Arial", size: 24 })],
+        children: nombreSeparado,
         spacing: { before: 0, after: 0 },
       });
 
@@ -56,9 +68,25 @@ export default function GuardarPronosticoButton() {
     const cierre = new Paragraph({
       alignment: AlignmentType.JUSTIFIED,
       indent: { left: 0 }, // 👈 sin sangría
-      children: [new TextRun({ text: pronosticoActual.cierre.replace("{username}", username), bold: true, font: "Arial", size: 24 })],
+      children: [new TextRun({ text: pronosticoActual.cierre.replace("{username}", username ), bold: true, font: "Arial", size: 24 })],
       spacing: { before: 0, after: 0 },
     });
+    const nnnnMarady = new Paragraph({
+      alignment: AlignmentType.START,
+      indent : {left: 0},
+      children: [new TextRun({text: pronosticoActual.id==1 ? 'nnnn' : ''})]
+    })
+    const advertenciaText = separadorSaltoDeLinea('--------------------------------------------------------------------------------------------------------------'+
+'En áreas de oleaje y marejadas hasta 2.5 metros la navegación será peligrosa para las embarcaciones pequeñas.\n'+
+'Embarcaciones pequeñas: eslora máxima de 10 metros.\n'+
+'Embarcaciones menores:   eslora máxima de 25 metros.\n'+
+'\n'+
+'En áreas de chubascos y tormentas eléctricas tanto la altura de la ola como la fuerza del viento podrán ser superiores.\n'+'\n', objectInfo, 'zonas', false )
+    const oleajeAdvertencia = new Paragraph({
+      alignment: AlignmentType.START,
+      indent : {left: 0},
+      children: advertenciaText,
+    })
 
     // Documento
     const doc = new Document({
@@ -70,32 +98,34 @@ export default function GuardarPronosticoButton() {
             new Paragraph({
               alignment: AlignmentType.CENTER,
               children: [
-                new ImageRun({
+                ...(objectInfo.isPhoto ? [new ImageRun({
                   data: logoBuffer,
                   transformation: {
                     width: Math.round(2.62 * 96), // 2.62'' → px (aprox 252px)
                     height: Math.round(0.8 * 96),  // 0.8'' → px (aprox 77px)
                   },
-                }),
+                }),] : [])
               ],
               spacing: { before: 0, after: 0 },
             }),
 
             // Encabezado
             new Paragraph({
-              alignment: AlignmentType.JUSTIFIED,
+              alignment: !notisHombresDelMar ? AlignmentType.JUSTIFIED : AlignmentType.START,
               indent: { left: 0 }, // 👈 sin sangría
-              children: [new TextRun({ text: encabezado, bold: true, font: "Arial", size: 28 })],
+              children: encabezadoRuns,
               spacing: { before: 0, after: 0 },
             }),
 
             // Guiones
+            ...(!notisHombresDelMar ? [
             new Paragraph({
               alignment: AlignmentType.JUSTIFIED,
               indent: { left: 0 }, // 👈 sin sangría
               children: [new TextRun({ text: "------------------------------------------------------------------------------------------------", bold: true, font: "Arial", size: 28 })],
               spacing: { before: 0, after: 0 },
             }),
+          ] : []), 
 
             // 👇 salto de línea entre guiones y primer bloque
             new Paragraph({
@@ -113,16 +143,17 @@ export default function GuardarPronosticoButton() {
             }),
 
             // Firma
+            oleajeAdvertencia,
             cierre,
+            nnnnMarady,
           ],
         },
       ],
     });
-
+    const nombreFinal = replaceFunction(pronosticoActual.archivoName, fechaInicio, fechaFin)
     try {
       const blob = await Packer.toBlob(doc);
-      const mes = fechaInicio.toLocaleDateString("es-ES", { month: "long" }).toUpperCase();
-      const nombreArchivo = `${pronosticoActual.titulo} ${mes}.docx`;
+      const nombreArchivo = `${nombreFinal}.docx`;
       saveAs(blob, nombreArchivo);
     } catch (error) {
       console.error("Error al generar el documento:", error);

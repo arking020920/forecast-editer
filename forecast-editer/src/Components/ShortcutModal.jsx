@@ -17,7 +17,7 @@ export default function ShortcutModal({ shortcuts, currentZone, onClose,zonas })
         console.log('ka asjdhaskd', currentZone)
         const key = zonas[currentZone].contenidoKey;
         const actual = contenido[key] || "";
-        const nuevo = actual ? actual + " " + shortcut.phrase : shortcut.phrase;
+        const nuevo = actual ? actual.slice(0,-2) + shortcut.phrase : shortcut.phrase;
         console.log("key usado en modal:", key);
         console.log("contenido antes:", contenido);
         console.log("nuevo valor:", nuevo);
@@ -30,6 +30,9 @@ export default function ShortcutModal({ shortcuts, currentZone, onClose,zonas })
         setInput("");
         onClose(); // cerrar modal
       }
+      else alert('Ingresa un atajo valido')
+      setInput("")
+      onClose()
     }
   };
 
@@ -40,7 +43,7 @@ export default function ShortcutModal({ shortcuts, currentZone, onClose,zonas })
           autoFocus
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => {if(Number(e.target.value)) {setInput(e.target.value)}}}
           onKeyDown={handleKeyDown} // 👈 ahora escuchamos Enter aquí
           placeholder="Número del atajo"
           className="border p-2 rounded w-full"
