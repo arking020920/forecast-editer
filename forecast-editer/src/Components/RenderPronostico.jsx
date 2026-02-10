@@ -5,19 +5,27 @@ import { pronosticos } from "../data/pronosticos";
 import { replaceFunction } from "../hooks/useAAAListener";
 
 export default function RenderPronostico() {
-  const { tipoDePronostico, fechaInicio, fechaFin, username, contenido, selected } = useForecast();
+  const { tipoDePronostico, fechaInicio, fechaFin, fechaFin1, fechaFin2, username, contenido, selected } = useForecast();
   const [open, setOpen] = useState(false);
   
   const pronosticoActual = pronosticos[tipoDePronostico][selected] || pronosticos.marino[selected];
 
   // Encabezado
-  const encabezado = replaceFunction(pronosticoActual.encabezado, fechaInicio, fechaFin)
+  const encabezado = replaceFunction(pronosticoActual.encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2)
 
   // Zonas: nombre en negrita, texto normal
-  const zonasTexto = pronosticoActual.zonas.map((z) => {
-    const bloque = z.nameBloqueInclude ? (
+  const zonasTexto = pronosticoActual.zonas.map((z, index) => {
+    let textOfTropa =''
+    textOfTropa = pronosticoActual.id ==4 && [6,12].includes(index) ? replaceFunction(z.bloque, fechaInicio, fechaFin, fechaFin1, fechaFin2) : z.bloque
+  
+    const bloque = z.nameBloqueInclude && pronosticoActual.id != 4 ? (
       <p key={`${z.contenidoKey}-bloque`} className="text-[12px] font-bold mt-1">
         {z.bloque}:
+      </p>
+    ) : null;
+    const bloqueTropa = z.nameBloqueInclude && pronosticoActual.id == 4 ? (
+      <p key={`${z.contenidoKey}-bloqueT`} className="text-[14px] font-bold uppercase leading-tight">
+        {textOfTropa}
       </p>
     ) : null;
 
@@ -36,6 +44,7 @@ export default function RenderPronostico() {
     return (
       <div key={z.contenidoKey}>
         {bloque}
+        {bloqueTropa}
         {nombre}
         {texto}
       </div>

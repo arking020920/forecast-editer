@@ -12,8 +12,8 @@ export const ForecastProvider = ({ children }) => {
   const [tipoDePronostico, setTipoDePronostico] = useState('marino');
   const [fechaInicio, setFechaInicio] = useState(new Date()); // fecha de hoy
   const [fechaFin, setFechaFin] = useState(new Date(new Date().getTime() + 24 * 60 * 60 * 1000)); // mañana
-  const [fechaFin2, setFechaFin2] = useState(new Date(new Date().getTime() + 48 * 60 * 60 * 1000)); // mañana
-  const [fechaFin3, setFechaFin3] = useState(new Date(new Date().getTime() + 72 * 60 * 60 * 1000)); // mañana
+  const [fechaFin1, setFechaFin1] = useState(new Date(new Date().getTime() + 48 * 60 * 60 * 1000)); // mañana
+  const [fechaFin2, setFechaFin2] = useState(new Date(new Date().getTime() + 72 * 60 * 60 * 1000)); // mañana
   const [zonas, setZonas] = useState(["Costa Norte", "Costa Sur"]); // se define según pronóstico
   const [username, setUsername] = useState("A. Quintana");
   const [contenido, setContenido] = useState({});
@@ -34,14 +34,29 @@ export const ForecastProvider = ({ children }) => {
   },[])
   
   const [pronosticoDatabase, setPronosticoDatabase] = useState(structure)
-  const guardarPronostico = () =>{
     const newPronosticoDatabase = structuredClone(pronosticoDatabase)
+    const guardarPronostico = () =>{
     Object.keys(contenido).map((value)=>{
     newPronosticoDatabase[selected][value] = contenido[value]
     })
     console.log('el new',newPronosticoDatabase)
     setPronosticoDatabase(newPronosticoDatabase)
+    const almacen = JSON.parse(localStorage.getItem("pronosticos")) || {};
+    almacen.admin = newPronosticoDatabase;
+    localStorage.setItem("pronosticos", JSON.stringify(almacen));
+    console.log("Guardado en localStorage:", almacen);
   }
+  // Cargar manualmente desde localStorage
+  const handleLoad = () => {
+    const almacen = JSON.parse(localStorage.getItem("pronosticos")) || {};
+    if (almacen.admin) {
+      setPronosticoDatabase(almacen.admin);
+      setContenido(almacen.admin[selected])
+      console.log("Cargado desde localStorage:", almacen.admin);
+    } else {
+      console.log("No hay datos guardados para admin");
+    }
+  };
   
 
   return (
@@ -53,6 +68,10 @@ export const ForecastProvider = ({ children }) => {
         setFechaInicio,
         fechaFin,
         setFechaFin,
+        fechaFin1,
+        setFechaFin1,
+        fechaFin2,
+        setFechaFin2,
         zonas,
         setZonas,
         username,
@@ -67,7 +86,8 @@ export const ForecastProvider = ({ children }) => {
         setSelected,
         pronosticoDatabase,
         setPronosticoDatabase,
-        guardarPronostico
+        guardarPronostico,
+        handleLoad
       }}
     >
       {children}

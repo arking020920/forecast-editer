@@ -4,7 +4,7 @@ import { useForecast } from "../context/ForecastContext";
 import RenderPronostico from "./RenderPronostico";
 import { SaverPronostico } from "./SaverPronostico";
 import ConfigModal from "./ConfigModal";
-
+import SaveToLocalStorage from "./SaveToLocalStorage";
 // 🔹 hook para cargar/guardar atajos
 import useShortcuts from "../hooks/useShortcuts";
 import ShortcutModal from "./ShortCutModal";

@@ -4,7 +4,7 @@ import { useForecast } from "../context/ForecastContext";
 import { pronosticos } from "../data/pronosticos";
 import { replaceFunction, separadorSaltoDeLinea } from "../hooks/useAAAListener";
 export default function GuardarPronosticoButton() {
-  const { tipoDePronostico, fechaInicio, fechaFin, username, contenido, selected, guardarPronostico } = useForecast();
+  const { tipoDePronostico, fechaInicio, fechaFin,fechaFin1, fechaFin2, username, contenido, selected, guardarPronostico } = useForecast();
   const pronosticoActual = pronosticos[tipoDePronostico][selected] || pronosticos.marino[selected];
 
   
@@ -24,19 +24,29 @@ export default function GuardarPronosticoButton() {
 
     // Encabezado
     let encabezado = pronosticoActual.encabezado  
-    encabezado = replaceFunction(encabezado, fechaInicio, fechaFin)
+    encabezado = replaceFunction(encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2)
       const notisHombresDelMar = pronosticoActual.id != 0
       encabezado = notisHombresDelMar ? encabezado : encabezado.slice(0,-105).toUpperCase()
       encabezado = normalizarGuiones(encabezado)
       const encabezadoRuns = separadorSaltoDeLinea(encabezado, objectInfo, 'encabezado')
   
     // Zonas
-    const zonas = pronosticoActual.zonas.map((z) => {
+    const zonas = pronosticoActual.zonas.map((z, index) => {
+      let textOfTropa = '' 
+      if(pronosticoActual.id != 5){
+      textOfTropa = pronosticoActual.id ==4 && [6,12].includes(index) ? 
+      separadorSaltoDeLinea(replaceFunction(z.bloque, fechaInicio, fechaFin, fechaFin1, fechaFin2),objectInfo,'zonas') 
+      : separadorSaltoDeLinea(z.bloque, objectInfo, 'zonas')}
+      else{
+        textOfTropa=separadorSaltoDeLinea(replaceFunction(z.bloque, fechaInicio, fechaFin, fechaFin1, fechaFin2), objectInfo,'zonas',true, false, AlignmentType.START,true)
+      }
+
+      const typeOfJustificacion = [pronosticoActual.id ==4 && [6, 12].includes(index)] ? 'START' : 'JUSTIFIED'
       const bloque = z.nameBloqueInclude
         ? new Paragraph({
-            alignment: AlignmentType.JUSTIFIED,
+            alignment: AlignmentType[typeOfJustificacion],
             indent: { left: 0 }, // 👈 sin sangría
-            children: [new TextRun({ text: `${z.bloque}:`, bold: true, font: "Arial", size: 24 })],
+            children: textOfTropa,
             spacing: { before: 0, after: 0 },
           })
         : null;
@@ -47,11 +57,11 @@ export default function GuardarPronosticoButton() {
         children: nombreSeparado,
         spacing: { before: 0, after: 0 },
       });
-
+      const alignmentText = contenido[z.contenidoKey].length > 55 ? AlignmentType.JUSTIFIED : AlignmentType.LEFT;      
+      const textZona = separadorSaltoDeLinea(contenido[z.contenidoKey], objectInfo, 'zonas', false, true, alignmentText)
       const texto = new Paragraph({
-        alignment: AlignmentType.JUSTIFIED,
         indent: { left: 0 }, // 👈 sin sangría
-        children: [new TextRun({ text: contenido[z.contenidoKey] || "", font: "Arial", size: 24 })],
+        children: textZona,
         spacing: { before: 0, after: 0 },
       });
 
@@ -76,12 +86,13 @@ export default function GuardarPronosticoButton() {
       indent : {left: 0},
       children: [new TextRun({text: pronosticoActual.id==1 ? 'nnnn' : ''})]
     })
-    const advertenciaText = separadorSaltoDeLinea('--------------------------------------------------------------------------------------------------------------'+
+    let advertenciaText = pronosticoActual.oleajeAdvertencia ? separadorSaltoDeLinea('--------------------------------------------------------------------------------------------------------------'+
 'En áreas de oleaje y marejadas hasta 2.5 metros la navegación será peligrosa para las embarcaciones pequeñas.\n'+
 'Embarcaciones pequeñas: eslora máxima de 10 metros.\n'+
 'Embarcaciones menores:   eslora máxima de 25 metros.\n'+
 '\n'+
-'En áreas de chubascos y tormentas eléctricas tanto la altura de la ola como la fuerza del viento podrán ser superiores.\n'+'\n', objectInfo, 'zonas', false )
+'En áreas de chubascos y tormentas eléctricas tanto la altura de la ola como la fuerza del viento podrán ser superiores.\n'+'\n', objectInfo, 'zonas', false ) : separadorSaltoDeLinea('', objectInfo, 'zonas', false)
+if(pronosticoActual.id == 5){advertenciaText=separadorSaltoDeLinea('En áreas de chubascos y tormentas eléctricas tanto la altura de la ola como la fuerza del viento podrán ser superiores.\n'+'\n', objectInfo, 'zonas', false )}
     const oleajeAdvertencia = new Paragraph({
       alignment: AlignmentType.START,
       indent : {left: 0},
@@ -150,7 +161,7 @@ export default function GuardarPronosticoButton() {
         },
       ],
     });
-    const nombreFinal = replaceFunction(pronosticoActual.archivoName, fechaInicio, fechaFin)
+    const nombreFinal = replaceFunction(pronosticoActual.archivoName, fechaInicio, fechaFin, fechaFin1, fechaFin2)
     try {
       const blob = await Packer.toBlob(doc);
       const nombreArchivo = `${nombreFinal}.docx`;

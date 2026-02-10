@@ -13,7 +13,7 @@ PRONÓSTICO MARINO PARA LOS HOMBRES DEL MAR, VÁLIDO DESDE LAS 10 DE LA MAÑANA 
     titulo: "PRONÓSTICO MARINO PARA LOS HOMBRES DEL MAR",
     archivoName:'PRONÓSTICO MARINO PARA LOS HOMBRES DEL MAR.{day0Number}.{month0Number}.{yearNumber}',
     encabezado: `
-PRONÓSTICO MARINO PARA LOS HOMBRES DEL MAR, VÁLIDO DESDE LAS 10 DE LA MAÑANA DE HOY {fechaInicio} HASTA LAS 10 DE LA MAÑANA DEL {fechaFin}.
+PRONÓSTICO MARINO PARA LOS HOMBRES DEL MAR, VÁLIDO DESDE LAS 10 DE LA MAÑANA DE HOY {fechaInicioNoMonth} HASTA LAS 10 DE LA MAÑANA DEL {fechaFin}.
 ---------------------------------------------------------------------------------------------------
     `,
     zonas: [
@@ -168,7 +168,7 @@ Fecha: {dayNumber}/{monthNumber}/{yearNumber}\n
     insertGuion:false,
     oleajeAdvertencia:true,
     objectInfo : {isPhoto: true, encabezadoFontSize: 12, zonasFontSize: 12},
-    titulo: "COSTAS DE CUBA {MORNING}",
+    titulo: "COSTAS DE CUBA",
     archivoName:'FQC41.12.{day0Number}.{month0Number}.{yearNumber}',
     encabezado: `FQCU41 MUHV {day0Number}1200Z
 PRONÓSTICO HIDROMETEOROLÓGICO PARA EL MAR TERRITORIAL DE CUBA    
@@ -283,5 +283,193 @@ Válido desde las 00:00 hasta las 24:00 horas del {fechaFin}.
     cierre: `
       Pronosticadores: {username}.
     `},
+     {
+    id:4,
+    info:`
+PRONOSTICO ESPECIALIZADO DE LAS COSTAS DE CUBA PARA LA EMPRESA DE NAVEGACIÓN CARIBE\n
+Fecha: {dayNumber}/{monthNumber}/{yearNumber}\n
+    Válido desde las 00:00 hasta las 24:00 horas del {fechaFin}.`,
+    isDayAndNight:false,
+    insertGuion:false,
+    oleajeAdvertencia:true,
+    objectInfo : {isPhoto: true, encabezadoFontSize: 12, zonasFontSize: 12},
+    titulo: "TROPAS GUARDAFRONTERAS",
+    archivoName:'PRONÓSTICO 24 HASTA 72 HORAS PARA LAS TGF-{day0Number}-{month0Number}-{yearNumber}',
+    encabezado: `FQCU41 MUHV {day0Number}1200 
+PRONÓSTICO HIDROMETEOROLÓGICO MARINO DE LAS COSTAS DE CUBA Y PARTE EXTERIOR DE LA PLATAFORMA INSULAR PARA LAS T.G.F.
+INSTITUTO DE METEOROLOGÍA. CENTRO DE METEOROLOGÍA MARINA. (C.I.T.M.A).            
+--------------------------------------------------------------------------------------------------------------------
+FECHA: {dayNumber}/{monthNumber}/{yearNumber}                                                               HORA: 15:00 Local.
+--------------------------------------------------------------------------------------------------------------------
+Válido desde las 00:00 hasta las 24:00 horas del {fechaFin}.
+--------------------------------------------------------------------------------------------------------------------`,
+    zonas: [
+      {
+        bloque: "SITUACIÓN SINÓPTICA SIGNIFICATIVA:",
+        nameBloqueInclude: true,
+        nombre: "",
+        contenidoKey: "zona1",
+      },
+      {
+        bloque: "COSTA NORTE",
+        nameBloqueInclude: true,
+        nombre: "DESDE CABO SAN ANTONIO HASTA PENÍNSULA HICACOS:",
+        contenidoKey: "zona2",
+      },
+      {
+        bloque: "COSTA NORTE",
+        nameBloqueInclude: false,
+        nombre: "DESDE PENÍNSULA HICACOS HASTA PUNTA MATERNILLOS:",
+        contenidoKey: "zona3",
+      },
+      {
+        bloque: "COSTA NORTE",
+        nameBloqueInclude: false,
+        nombre: "DESDE PUNTA MATERNILLOS HASTA PUNTA MAISÍ:",
+        contenidoKey: "zona4",
+      },
+      {
+        bloque: "COSTA SUR",
+        nameBloqueInclude: true,
+        nombre: "DESDE PUNTA MAISÍ HASTA CABO CRUZ:",
+        contenidoKey: "zona5",
+      },
+      {
+        bloque: "COSTA SUR",
+        nameBloqueInclude: false,
+        nombre: "DESDE CABO CRUZ HASTA EL CABO SAN ANTONIO, INCLUYENDO A LA ISLA DE LA JUVENTUD:",
+        contenidoKey: "zona6",
+      },
+      {
+        bloque: '----------------------------------------------------------------------------------------------------------------\n'+
+'Pronóstico para 48 horas.\n'+
+'Válido desde las 00:00 hasta las 24:00 horas del {fechaFin1}.\n'+
+'----------------------------------------------------------------------------------------------------------------\n'+
+'SITUACIÓN SINÓPTICA SIGNIFICATIVA:',
+        nameBloqueInclude: true,
+        nombre: '',
+        contenidoKey: "zona7",
+      },
+      {
+        bloque: "COSTA NORTE",
+        nameBloqueInclude: true,
+        nombre: "DESDE CABO SAN ANTONIO HASTA PENÍNSULA HICACOS:",
+        contenidoKey: "zona8",
+      },
+      {
+        bloque: "COSTA NORTE",
+        nameBloqueInclude: false,
+        nombre: "DESDE PENÍNSULA HICACOS HASTA PUNTA MATERNILLOS:",
+        contenidoKey: "zona9",
+      },
+      {
+        bloque: "COSTA NORTE",
+        nameBloqueInclude: false,
+        nombre: "DESDE PUNTA MATERNILLOS HASTA PUNTA MAISÍ:",
+        contenidoKey: "zona10",
+      },
+      {
+        bloque: "COSTA SUR",
+        nameBloqueInclude: true,
+        nombre: "DESDE PUNTA MAISÍ HASTA CABO CRUZ:",
+        contenidoKey: "zona11",
+      },
+      {
+        bloque: "COSTA SUR",
+        nameBloqueInclude: false,
+        nombre: "DESDE CABO CRUZ HASTA EL CABO SAN ANTONIO, INCLUYENDO A LA ISLA DE LA JUVENTUD:",
+        contenidoKey: "zona12",
+      },
+      {
+        bloque: '----------------------------------------------------------------------------------------------------------------\n'+
+'Pronóstico para 72 horas.\n'+
+'Válido desde las 00:00 hasta las 24:00 horas del {fechaFin2}.\n'+
+'----------------------------------------------------------------------------------------------------------------\n'+
+'SITUACIÓN SINÓPTICA SIGNIFICATIVA:',
+        nameBloqueInclude: true,
+        nombre: '',
+        contenidoKey: "zona13",
+      },
+      {
+        bloque: "COSTA NORTE",
+        nameBloqueInclude: true,
+        nombre: "DESDE CABO SAN ANTONIO HASTA PENÍNSULA HICACOS:",
+        contenidoKey: "zona14",
+      },
+      {
+        bloque: "COSTA NORTE",
+        nameBloqueInclude: false,
+        nombre: "DESDE PENÍNSULA HICACOS HASTA PUNTA MATERNILLOS:",
+        contenidoKey: "zona15",
+      },
+      {
+        bloque: "COSTA NORTE",
+        nameBloqueInclude: false,
+        nombre: "DESDE PUNTA MATERNILLOS HASTA PUNTA MAISÍ:",
+        contenidoKey: "zona16",
+      },
+      {
+        bloque: "COSTA SUR",
+        nameBloqueInclude: true,
+        nombre: "DESDE PUNTA MAISÍ HASTA CABO CRUZ:",
+        contenidoKey: "zona17",
+      },
+      {
+        bloque: "COSTA SUR",
+        nameBloqueInclude: false,
+        nombre: "DESDE CABO CRUZ HASTA EL CABO SAN ANTONIO, INCLUYENDO A LA ISLA DE LA JUVENTUD:",
+        contenidoKey: "zona18",
+      },
+    ],
+    cierre: `
+      Pronosticadores: {username}.
+    `
+    },
+    {
+      id:5,
+    info:`PRONÓSTICO MARINO PARA LA BAHÍA DEL MARIEL, VÁLIDO DESDE LAS 6 DE LA TARDE DE HOY {fechaInicio} HASTA LAS 6 DE LA TARDE DEL {fechaFin}.`,
+    isDayAndNight:true,
+    insertGuion:false,
+    oleajeAdvertencia:true,
+    objectInfo : {isPhoto: true, encabezadoFontSize: 12, zonasFontSize: 12},
+    titulo: "BAHÍA DEL MARIEL",
+    archivoName:'PRONOSTICO PARA LA BAHIA DEL MARIEL {day0Number}-{month0Number}-{yearNumber} (6 pm)',
+    encabezado: `PRONÓSTICO MARINO PARA LA BAHÍA DEL MARIEL, VÁLIDO DESDE LAS 6 DE LA TARDE DE HOY {fechaInicioNoMonth} HASTA LAS 6 DE LA TARDE DEL {fechaFin}.
+--------------------------------------------------------------------------------------------------------------
+Datos del cliente: Sociedad Mercantil Servicios Marítimos Mariel vpoper@sm.co.cu, practicaje@sm.co.cu, pdireccion@sm.co.cu
+-------------------------------------------------------------------------------------------------------------
+Móvil: +53-52133982
+Teléf.: +53-49393403
+--------------------------------------------------------------------------------------------------------------`,
+zonas: [
+      {
+        bloque: "SITUACIÓN SINÓPTICA SIGNIFICATIVA",
+        nameBloqueInclude: true,
+        nombre: "",
+        contenidoKey: "zona1",
+      },
+      {
+        bloque: "PARTE EXTERIOR DE LA BAHÍA",
+        nameBloqueInclude: true,
+        nombre: "",
+        contenidoKey: "zona2",
+      },
+      {
+        bloque: "CANAL DE ENTRADA",
+        nameBloqueInclude: true,
+        nombre: "",
+        contenidoKey: "zona3",
+      },
+      {
+        bloque: "PARTE INTERIOR DE LA BAHÍA",
+        nameBloqueInclude: true,
+        nombre: "",
+        contenidoKey: "zona4",
+      },
+    ],
+    cierre: `
+      Pronosticadores: {username}.
+    `
+    }
   ],
 };
