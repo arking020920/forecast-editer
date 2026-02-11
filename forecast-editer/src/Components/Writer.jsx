@@ -34,94 +34,145 @@ export default function Writer() {
   const bufferRef = useRef("");
 
   const handleKeyDown = (e) => {
-    let texto = ''
-    let nuevo = ''
-    let check = false
-    const key = zonas[currentZone].contenidoKey;
-    const actual = contenido[key] || "";
+  let texto = ''
+  let nuevo = ''
+  let check = false
+  const key = zonas[currentZone].contenidoKey;
+  const actual = contenido[key] || "";
 
-    bufferRef.current += e.key;
-    if (bufferRef.current.length > 3) {
-      bufferRef.current = bufferRef.current.slice(-3);
-    }
+  // posición del cursor (caret) en el input/textarea
+  const cursorPos = (e.target && typeof e.target.selectionStart === "number") ? e.target.selectionStart : actual.length;
 
-    if (bufferRef.current === "aaa") {
+  bufferRef.current += e.key;
+  if (bufferRef.current.length > 3) {
+    bufferRef.current = bufferRef.current.slice(-3);
+  }
 
-      // borrar las tres letras "aaa"
-      const nuevo = actual.endsWith("aaa") ? actual.slice(0, -3) : actual;
-      setContenido({ ...contenido, [key]: nuevo });
+  if (bufferRef.current === "aaa") {
 
-      setOpenShortcut(true);
-      bufferRef.current = "";
-    }
-    
-    else if(bufferRef.current.slice(1,2) === 'v' && [0,2,3,4].includes(pronosticos[tipoDePronostico][selected].id)){
- 
-      vCosta.map((value, index) => {
-        if (bufferRef.current.slice(1) === `v${index}` && 
-          index != 0 ) {
-          texto = `${vCosta[index-1]} - ${vCosta[index]} km/h (fza ${index})`
-          nuevo = actual.slice(0, -1) + texto 
-          check = true
-           
-        }
-        })
-    }
-    else if(bufferRef.current.slice(1,2) === 'o' && [0,2,3,4].includes(pronosticos[tipoDePronostico][selected].id)){
-        oCosta.map((value, index) => {
-        if (bufferRef.current.slice(1) === `o${index}` && 
-          index != 0) {
-          texto = `${value.nombre} con olas ${value.valor}`
-          nuevo = actual.slice(0, -1) + texto 
-          check = true
-           
-        }
-        })
-    }
-    else if(bufferRef.current.slice(1,2) === 'v' && pronosticos[tipoDePronostico][selected].id == 1){
-      vMarady.map((value, index) => {
-        if (bufferRef.current.slice(1) === `v${index}` && 
-          index != 0) {
-          texto = `${value[0]} - ${value[1]} kts (fza ${index})`
-          nuevo = actual.slice(0, -1) + texto 
-          check = true
-           
-        }
-        })
-    }
-    else if(bufferRef.current.slice(1,2) === 'o' && [1,5].includes(pronosticos[tipoDePronostico][selected].id)){
-      oMarady.map((value, index) => {
-        if (bufferRef.current.slice(1) === `o${index}` && 
-          index != 0) {
-          texto = `olas entre ${value[0]} - ${value[1]} metros (fza ${index})`
-          nuevo = actual.slice(0, -1) + texto 
-          check = true
-           
-        }
-        })
-    }
-    else if(bufferRef.current.slice(1,2) === 'v' && pronosticos[tipoDePronostico][selected].id == 5){
-      vMarady.map((value, index) => {
-        if (bufferRef.current.slice(1) === `v${index}` && 
-          index != 0) {
-          texto = `${value[0]} - ${value[1]} kts (${vMariel[index][0]} - ${vMariel[index][1]} km/h fza ${index})`
-          nuevo = actual.slice(0, -1) + texto 
-          check = true
-           
-        }
-        })
-    }
+    // borrar las tres letras "aaa" justo antes del cursor
+    const triggerLen = 3;
+    const before = actual.slice(0, Math.max(0, cursorPos - triggerLen));
+    const after = actual.slice(cursorPos);
+    nuevo = before + after;
+
+   
+  try {
+    const payload = {
+      zoneKey: key, // e.g. "zona1"
+      cursorPos: Math.max(0, cursorPos - triggerLen),
+      selectionEnd: Math.max(0, cursorPos - triggerLen) // opcional si quieres rango
+    };
+    sessionStorage.setItem('lastShortcutState', JSON.stringify(payload));
+  } catch (err) {
+    console.warn('No se pudo guardar la posición del cursor para el atajo', err);
+  }
+
+    setContenido({ ...contenido, [key]: nuevo });
+
+    setOpenShortcut(true);
+    bufferRef.current = "";
+  }
+
+  else if (bufferRef.current.slice(1,2) === 'v' && [0,2,3,4].includes(pronosticos[tipoDePronostico][selected].id)){
+
+    vCosta.map((value, index) => {
+      if (bufferRef.current.slice(1) === `v${index}` &&
+        index != 0 ) {
+        texto = ' ' + `${vCosta[index-1]} - ${vCosta[index]} km/h (fza ${index})`
+        // eliminar el trigger (ej. "v4") justo antes del cursor e insertar texto en la posición del cursor
+        const trigger = bufferRef.current.slice(1); // "vX"
+        const triggerLen = trigger.length;
+        const before = actual.slice(0, Math.max(0, cursorPos - triggerLen) + 1);
+        const after = actual.slice(cursorPos);
+        nuevo = before.slice(-1) !== '\n' ? before + texto + after : before + texto.slice(1) + after;
+      
+        check = true
+
+      }
+    })
+  }
+  else if (bufferRef.current.slice(1,2) === 'o' && [0,2,3,4].includes(pronosticos[tipoDePronostico][selected].id)){
+    oCosta.map((value, index) => {
+      if (bufferRef.current.slice(1) === `o${index}` &&
+        index != 0) {
+        texto =' ' +  `${value.nombre} con olas ${value.valor}`
+        const trigger = bufferRef.current.slice(1);
+        const triggerLen = trigger.length;
+        const before = actual.slice(0, Math.max(0, cursorPos - triggerLen) + 1);
+        const after = actual.slice(cursorPos);
+        nuevo = before.slice(-1) !== '\n' ? before + texto + after : before + texto.slice(1) + after;
+        check = true
+
+      }
+    })
+  }
+  else if (bufferRef.current.slice(1,2) === 'v' && pronosticos[tipoDePronostico][selected].id == 1){
+    vMarady.map((value, index) => {
+      if (bufferRef.current.slice(1) === `v${index}` &&
+        index != 0) {
+        texto =' ' +  `${value[0]} - ${value[1]} kts (fza ${index})`
+        const trigger = bufferRef.current.slice(1);
+        const triggerLen = trigger.length;
+        const before = actual.slice(0, Math.max(0, cursorPos - triggerLen) + 1);
+        const after = actual.slice(cursorPos);
+        nuevo = before.slice(-1) !== '\n' ? before.slice + texto + after : before + texto.slice(1) + after;;
+        check = true
+
+      }
+    })
+  }
+  else if (bufferRef.current.slice(1,2) === 'o' && [1,5].includes(pronosticos[tipoDePronostico][selected].id)){
+    oMarady.map((value, index) => {
+      if (bufferRef.current.slice(1) === `o${index}` &&
+        index != 0) {
+        texto =' ' +  `olas entre ${value[0]} - ${value[1]} metros (fza ${index})`
+        const trigger = bufferRef.current.slice(1);
+        const triggerLen = trigger.length;
+        const before = actual.slice(0, Math.max(0, cursorPos - triggerLen) + 1);
+        const after = actual.slice(cursorPos);
+        nuevo = before.slice(-1) !== '\n' ? before + texto + after : before + texto.slice(1) + after;
+        check = true
+
+      }
+    })
+  }
+  else if (bufferRef.current.slice(1,2) === 'v' && pronosticos[tipoDePronostico][selected].id == 5){
+    vMarady.map((value, index) => {
+      if (bufferRef.current.slice(1) === `v${index}` &&
+        index != 0) {
+        texto =' ' +  `${value[0]} - ${value[1]} kts (${vMariel[index][0]} - ${vMariel[index][1]} km/h fza ${index})`
+        const trigger = bufferRef.current.slice(1);
+        const triggerLen = trigger.length;
+        const before = actual.slice(0, Math.max(0, cursorPos - triggerLen) + 1);
+        const after = actual.slice(cursorPos);
+        nuevo = before.slice(-1) !== '\n' ? before + texto + after : before + texto.slice(1) + after;
+        check = true
+
+      }
+    })
+  }
   if (check) {
-    const newContenido =structuredClone(contenido)
+    const newContenido = structuredClone(contenido)
     newContenido[key] = nuevo
     setContenido(newContenido)
     setTimeout(()=>{
+        // comportamiento original: remover posible carácter sobrante al final (evita el "4" extra)
         newContenido[key] = newContenido[key].slice(0)
         setContenido(newContenido)
+
+        // mantener caret justo después del texto insertado si el elemento está disponible
+        const el = document.activeElement;
+        if (el && typeof el.selectionStart === "number") {
+          const newCursorPos = (cursorPos - (bufferRef.current ? bufferRef.current.slice(1).length : 0)) + texto.length;
+          el.selectionStart = newCursorPos;
+          el.selectionEnd = newCursorPos;
+        }
       },10)
     }
        
-  };
+};
+
 
   return (
     <div className="flex flex-col flex-grow p-6">

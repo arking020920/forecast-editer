@@ -1,1 +1,35 @@
-@import 'tailwindcss'
+@import 'tailwindcss';
+
+@layer utilities {
+  .shadow-moon {
+    box-shadow: 0.6em 0.5em 0 0em #D9FBFF inset,
+                rgba(255,255,255,0.1) 0em -1.4em 0 -0.9em,
+                rgba(255,255,255,0.1) 0.6em 1.4em 0 -0.9em,
+                rgba(255,255,255,0.1) 0.4em 2.6em 0 -0.8em,
+                rgba(255,255,255,0.1) 1.2em 0.4em 0 -0.82em,
+                rgba(255,255,255,0.1) 1.6em 1.6em 0 -0.9em,
+                rgba(255,255,255,0.1) 1.2em 2.6em 0 -0.9em,
+                rgba(255,255,255,0.1) -0.8em 1.4em 0 -0.9em,
+                rgba(255,255,255,0.1) -0.2em 2em 0 -0.9em;
+  }
+
+  .shadow-sun {
+    box-shadow: 0.6em 0.6em 0 1em #fff inset,
+                0 -1em 0 -0.54em #fff,
+                0.7em -0.7em 0 -0.6em #fff,
+                1em 0 0 -0.54em #fff,
+                0.7em 0.7em 0 -0.6em #fff,
+                0 1em 0 -0.54em #fff,
+                -0.7em 0.7em 0 -0.6em #fff,
+                -1em 0 0 -0.54em #fff,
+                -0.7em -0.7em 0 -0.6em #fff;
+  }
+
+  .bg-nightBg {
+    background-color: #423966;
+  }
+
+  .bg-dayBg {
+    background-color: #9ee3fb;
+  }
+}

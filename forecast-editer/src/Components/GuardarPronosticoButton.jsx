@@ -24,7 +24,7 @@ export default function GuardarPronosticoButton() {
 
     // Encabezado
     let encabezado = pronosticoActual.encabezado  
-    encabezado = replaceFunction(encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2)
+    encabezado = !pronosticoActual.id ==5 ? replaceFunction(encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2) :  replaceFunction(encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2, true)
       const notisHombresDelMar = pronosticoActual.id != 0
       encabezado = notisHombresDelMar ? encabezado : encabezado.slice(0,-105).toUpperCase()
       encabezado = normalizarGuiones(encabezado)
@@ -70,8 +70,10 @@ export default function GuardarPronosticoButton() {
         children: [],
         spacing: { before: 0, after: 0 },
       });
-
-      return [bloque, nombre, texto, salto].filter(Boolean);
+      if(z.nombre !== ''){
+      return [bloque, nombre, texto, salto].filter(Boolean)}
+      else{
+        return [bloque, texto, salto].filter(Boolean)}
     });
 
     // Firma

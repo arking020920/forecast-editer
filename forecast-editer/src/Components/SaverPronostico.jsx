@@ -14,7 +14,7 @@ export function SaverPronostico({}){
     </button>
     <span className="absolute top-8 left-1/2 transform -translate-x-1/2 
                      bg-black text-white text-xs rounded px-2 py-1 opacity-0 
-                     group-hover:opacity-100 transition">
+                     group-hover:opacity-100 transition z-[9999]">
       Guarda una copia de Seguridad para evitar pérdidas
     </span>
   </div>
@@ -29,7 +29,7 @@ export function SaverPronostico({}){
     </button>
     <span className="absolute top-8 left-1/2 transform -translate-x-1/2 
                      bg-black text-white text-xs rounded px-2 py-1 opacity-0 
-                     group-hover:opacity-100 transition">
+                     group-hover:opacity-100 transition z-[9999]">
       Carga los datos de la copia de seguridad guardada
     </span>
   </div>

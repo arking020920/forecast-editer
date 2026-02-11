@@ -4,6 +4,7 @@ import { ForecastProvider } from "./context/ForecastContext";
 import EditorLayout from "./Components/EditorLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar"; // 👈 Importamos el Navbar
+import { ThemeProvider } from "./context/ToggleContext";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -16,6 +17,7 @@ function App() {
   // Si hay usuario logueado, mostrar la aplicación completa
   return (
     <ForecastProvider>
+      <ThemeProvider>
       <BrowserRouter>
         {/* Navbar siempre visible */}
         <Navbar />
@@ -31,6 +33,7 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
+      </ThemeProvider>
     </ForecastProvider>
   );
 }

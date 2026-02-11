@@ -286,7 +286,7 @@ Válido desde las 00:00 hasta las 24:00 horas del {fechaFin}.
      {
     id:4,
     info:`
-PRONOSTICO ESPECIALIZADO DE LAS COSTAS DE CUBA PARA LA EMPRESA DE NAVEGACIÓN CARIBE\n
+PRONÓSTICO 24 HASTA 72 HORAS PARA LAS TGF\n
 Fecha: {dayNumber}/{monthNumber}/{yearNumber}\n
     Válido desde las 00:00 hasta las 24:00 horas del {fechaFin}.`,
     isDayAndNight:false,

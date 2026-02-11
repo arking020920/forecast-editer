@@ -9,6 +9,8 @@ import SaveToLocalStorage from "./SaveToLocalStorage";
 import useShortcuts from "../hooks/useShortcuts";
 import ShortcutModal from "./ShortCutModal";
 import { LoaderPronostico } from "./LoaderPronostico";
+import ToggleButton from "./ToggleButton";
+import { pronosticos } from "../data/pronosticos";
 
 export default function EditorNavbar() {
   const { tipoDePronostico, username, currentZone, contenido, setContenido, zonas, guardarPronostico, selected } = useForecast();
@@ -42,7 +44,8 @@ export default function EditorNavbar() {
       {/* Icono de Vista Previa del Documento */}
       <RenderPronostico />
       <SaverPronostico/>
-      {selected==3 &&(<LoaderPronostico></LoaderPronostico>)}
+      {[3,4,5].includes(selected) &&(<LoaderPronostico></LoaderPronostico>)}
+      {pronosticos[tipoDePronostico][selected].isDayAndNight && (<ToggleButton></ToggleButton>)}
 
       {/* Botón Configuración */}
       <button

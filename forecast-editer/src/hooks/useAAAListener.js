@@ -1,15 +1,41 @@
 import { AlignmentType, TextRun } from "docx";
-export const replaceFunction = (texto, fechaInicio, fechaFin, fechaFin1, fechaFin2)=>{
-      const newTexto = texto.replace("{fechaInicio}", fechaInicio.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }))
-      .replace("{fechaInicioNoMonth}", fechaInicio.toLocaleDateString("es-ES",{ day: "numeric", month: "long",}))
-      .replace("{fechaFin}", fechaFin.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }))
+export const replaceFunction = (texto, fechaInicio, fechaFin, fechaFin1, fechaFin2,isDayAndNight=true, isMariel=false)=>{
+    let newTexto = ''  
+    function isNowBetweenMidnightAnd0730() {
+  const now = new Date();
+  const minutesNow = now.getHours() * 60 + now.getMinutes();
+  const start = 0;           // 00:00 en minutos
+  const end = 7 * 60 + 30;   // 07:30 en minutos
+  return minutesNow >= start && minutesNow <= end;}
+
+    if(!isDayAndNight){
+      newTexto = texto.replace("{fechaInicio}", fechaInicio.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }))
+      .replace("{fechaInicioNoMonth}", !isMariel ? fechaInicio.toLocaleDateString("es-ES",{ day: "numeric", month: "long",}) : fechaInicio.toLocaleDateString("es-ES",{ day: "numeric", month: "long",}).toUpperCase())
+      .replace("{fechaFin}",!isMariel ? fechaFin.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }) : fechaFin.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }).toUpperCase())
       .replace("{fechaFin1}", fechaFin1.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }))
       .replace("{fechaFin2}", fechaFin2.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }))
       .replace("{dayNumber}", `${fechaInicio.getDate()}`)
       .replace("{day0Number}", fechaInicio.getDate()<10 ? `0${fechaInicio.getDate()}` : `${fechaInicio.getDate()}`)
       .replace("{month0Number}", fechaInicio.getMonth() + 1 <10 ? `0${fechaInicio.getMonth() +1}` : `${fechaInicio.getMonth() + 1}`)
       .replace("{monthNumber}", `${fechaInicio.getMonth() + 1}`)
-      .replace("{yearNumber}", `${fechaInicio.getFullYear()}`);
+      .replace("{yearNumber}", `${fechaInicio.getFullYear()}`);}
+      else{
+        const horario = isNowBetweenMidnightAnd0730()
+        if(!isMariel){
+          newTexto = texto.replace("{fechaFin}", horario ? fechaInicio.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }) :
+        fechaFin.toLocaleDateString("es-ES",{ day: "numeric", month: "long", year: "numeric" }))
+        }
+      }
+
+
+      // Devuelve true si la hora actual está entre 00:00 y 07:30 (inclusive), usando la hora local
+    /*function isNowBetweenMidnightAnd0730() {
+  const now = new Date();
+  const minutesNow = now.getHours() * 60 + now.getMinutes();
+  const start = 0;           // 00:00 en minutos
+  const end = 7 * 60 + 30;   // 07:30 en minutos
+  return minutesNow >= start && minutesNow <= end;}*/
+
       return newTexto
       }
 export const separadorSaltoDeLinea =(encabezado, objectInfo,type, negrita=true, justified=false, alignmentText=AlignmentType.START, isMariel = false)=>{
