@@ -12,8 +12,8 @@ export const ForecastProvider = ({ children }) => {
   const [tipoDePronostico, setTipoDePronostico] = useState('marino');
   const [fechaInicio, setFechaInicio] = useState(new Date()); // fecha de hoy
   const [fechaFin, setFechaFin] = useState(new Date(new Date().getTime() + 24 * 60 * 60 * 1000)); // mañana
-  const [fechaFin1, setFechaFin1] = useState(new Date(new Date().getTime() + 48 * 60 * 60 * 1000)); // mañana
-  const [fechaFin2, setFechaFin2] = useState(new Date(new Date().getTime() + 72 * 60 * 60 * 1000)); // mañana
+  const [fechaFin1, setFechaFin1] = useState(new Date(new Date().getTime() + 48 * 60 * 60 * 1000)); // pasado mañana
+  const [fechaFin2, setFechaFin2] = useState(new Date(new Date().getTime() + 72 * 60 * 60 * 1000)); // traspasado mañana
   const [zonas, setZonas] = useState(["Costa Norte", "Costa Sur"]); // se define según pronóstico
   const [username, setUsername] = useState("A. Quintana");
   const [contenido, setContenido] = useState({});

@@ -3,10 +3,12 @@ import { saveAs } from "file-saver";
 import { useForecast } from "../context/ForecastContext";
 import { pronosticos } from "../data/pronosticos";
 import { replaceFunction, separadorSaltoDeLinea } from "../hooks/useAAAListener";
+import { useTheme } from "../context/ToggleContext";
 export default function GuardarPronosticoButton() {
   const { tipoDePronostico, fechaInicio, fechaFin,fechaFin1, fechaFin2, username, contenido, selected, guardarPronostico } = useForecast();
+  const {isDay} = useTheme()
   const pronosticoActual = pronosticos[tipoDePronostico][selected] || pronosticos.marino[selected];
-
+  const isMariel = pronosticoActual.id ==5 ? true : false
   
 
   const handleGuardar = async () => {
@@ -21,10 +23,9 @@ export default function GuardarPronosticoButton() {
   return texto.replace(/-{3,}/g, "-".repeat(longitud));
 }
 
-
     // Encabezado
     let encabezado = pronosticoActual.encabezado  
-    encabezado = !pronosticoActual.id ==5 ? replaceFunction(encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2) :  replaceFunction(encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2, true)
+    encabezado = !(pronosticoActual.id ==5) ? replaceFunction(encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2, pronosticoActual.isDayAndNight, isDay, isMariel) :  replaceFunction(encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2,pronosticoActual.isDayAndNight, isDay, true)
       const notisHombresDelMar = pronosticoActual.id != 0
       encabezado = notisHombresDelMar ? encabezado : encabezado.slice(0,-105).toUpperCase()
       encabezado = normalizarGuiones(encabezado)
@@ -35,10 +36,10 @@ export default function GuardarPronosticoButton() {
       let textOfTropa = '' 
       if(pronosticoActual.id != 5){
       textOfTropa = pronosticoActual.id ==4 && [6,12].includes(index) ? 
-      separadorSaltoDeLinea(replaceFunction(z.bloque, fechaInicio, fechaFin, fechaFin1, fechaFin2),objectInfo,'zonas') 
+      separadorSaltoDeLinea(replaceFunction(z.bloque, fechaInicio, fechaFin, fechaFin1, fechaFin2, pronosticoActual.isDayAndNight, isDay, isMariel),objectInfo,'zonas') 
       : separadorSaltoDeLinea(z.bloque, objectInfo, 'zonas')}
       else{
-        textOfTropa=separadorSaltoDeLinea(replaceFunction(z.bloque, fechaInicio, fechaFin, fechaFin1, fechaFin2), objectInfo,'zonas',true, false, AlignmentType.START,true)
+        textOfTropa=separadorSaltoDeLinea(replaceFunction(z.bloque, fechaInicio, fechaFin, fechaFin1, fechaFin2, pronosticoActual.isDayAndNight, isDay, isMariel), objectInfo,'zonas',true, false, AlignmentType.START,true)
       }
 
       const typeOfJustificacion = [pronosticoActual.id ==4 && [6, 12].includes(index)] ? 'START' : 'JUSTIFIED'
@@ -163,7 +164,7 @@ if(pronosticoActual.id == 5){advertenciaText=separadorSaltoDeLinea('En áreas de
         },
       ],
     });
-    const nombreFinal = replaceFunction(pronosticoActual.archivoName, fechaInicio, fechaFin, fechaFin1, fechaFin2)
+    const nombreFinal = replaceFunction(pronosticoActual.archivoName, fechaInicio, fechaFin, fechaFin1, fechaFin2, pronosticoActual.isDayAndNight, isDay, isMariel)
     try {
       const blob = await Packer.toBlob(doc);
       const nombreArchivo = `${nombreFinal}.docx`;

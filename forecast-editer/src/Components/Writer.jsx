@@ -3,11 +3,15 @@ import { useForecast } from "../context/ForecastContext";
 import { pronosticos } from "../data/pronosticos";
 import GuardarPronosticoButton from "./GuardarPronosticoButton";
 import ShortcutModal from "./ShortCutModal";
+import { replaceFunction } from "../hooks/useAAAListener";
+import { useTheme } from "../context/ToggleContext";
 
 export default function Writer() {
   const {
     fechaInicio,
     fechaFin,
+    fechaFin1,
+    fechaFin2,
     username,
     contenido,
     setContenido,
@@ -17,8 +21,10 @@ export default function Writer() {
     tipoDePronostico,
     selected
   } = useForecast();
+  const {isDay} = useTheme()
   const [openShortcut, setOpenShortcut] = useState(false);
   const pronosticoActual = pronosticos[tipoDePronostico][selected]; 
+  const isMariel = pronosticoActual.id ==5 ? true : false
   const zonas = pronosticoActual.zonas;
   const vCosta = [0, 7, 10, 19, 28, 37, 46, 57]
   const oCosta = [{},{nombre:'Mar tranquila', valor:'inferiores a 0.5 metros (fzas 1 y 2)'},
@@ -173,19 +179,13 @@ export default function Writer() {
        
 };
 
-
+  const info = replaceFunction (pronosticoActual.info, fechaInicio, fechaFin, fechaFin1, fechaFin2, pronosticoActual.isDayAndNight, isDay, isMariel)
   return (
     <div className="flex flex-col flex-grow p-6">
       {/* Encabezado */}
       <h1 className="text-2xl font-bold mb-2">{pronosticoActual.titulo}</h1>
       <p className="text-sm-3 mb-4 font-bold whitespace-pre-wrap leading-none">
-        {pronosticoActual.info
-          .replace("{fechaInicio}", fechaInicio.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }))
-          .replace("{fechaFin}", fechaFin.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }))
-          .replace("{dayNumber}", String(fechaInicio.getDate()))
-          .replace("{monthNumber}", String(fechaInicio.getMonth()))
-          .replace("{yearNumber}", String(fechaInicio.getFullYear()))
-          .toLocaleUpperCase()}
+        {info.toLocaleUpperCase()}
       </p>
 
       {/* Barra de navegación de zonas */}
