@@ -3,20 +3,21 @@ import { createPortal } from "react-dom";
 import { useForecast } from "../context/ForecastContext";
 import { pronosticos } from "../data/pronosticos";
 import { replaceFunction } from "../hooks/useAAAListener";
-
+import { useTheme } from "../context/ToggleContext";
 export default function RenderPronostico() {
   const { tipoDePronostico, fechaInicio, fechaFin, fechaFin1, fechaFin2, username, contenido, selected } = useForecast();
   const [open, setOpen] = useState(false);
-  
+  const {isDay} = useTheme()
   const pronosticoActual = pronosticos[tipoDePronostico][selected] || pronosticos.marino[selected];
+  const isMariel = pronosticoActual.id ==5 ? true : false
 
   // Encabezado
-  const encabezado = replaceFunction(pronosticoActual.encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2)
+  const encabezado = replaceFunction(pronosticoActual.encabezado, fechaInicio, fechaFin, fechaFin1, fechaFin2, pronosticoActual.isDayAndNight, isDay, isMariel)
 
   // Zonas: nombre en negrita, texto normal
   const zonasTexto = pronosticoActual.zonas.map((z, index) => {
     let textOfTropa =''
-    textOfTropa = pronosticoActual.id ==4 && [6,12].includes(index) ? replaceFunction(z.bloque, fechaInicio, fechaFin, fechaFin1, fechaFin2) : z.bloque
+    textOfTropa = pronosticoActual.id ==4 && [6,12].includes(index) ? replaceFunction(z.bloque, fechaInicio, fechaFin, fechaFin1, fechaFin2, pronosticoActual.isDayAndNight, isDay, isMariel) : z.bloque
   
     const bloque = z.nameBloqueInclude && pronosticoActual.id != 4 ? (
       <p key={`${z.contenidoKey}-bloque`} className="text-[12px] font-bold mt-1">

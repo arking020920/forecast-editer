@@ -55,7 +55,7 @@ Desde el Centro de Meteorología Marina les informo el Met. {username}.
   {
     id:1,
     titulo: "MARADY",
-    archivoName:'FQCU40.12.{day0Number}.{month0Number}.{yearNumber}',
+    archivoName:'FQCU40.{dayOrNight}.{day0Number}.{month0Number}.{yearNumber}',
     insertGuion:false,
     objectInfo : {isPhoto: false, encabezadoFontSize: 12, zonasFontSize: 12},
     info:`PRONÓSTICO METEOROLÓGICO PARA LOS MARES ADYACENTES A CUBA.\n
@@ -65,7 +65,7 @@ Desde el Centro de Meteorología Marina les informo el Met. {username}.
     isDayAndNight:true,
     oleajeAdvertencia: false,
     encabezado: `ZCZC
-FQCU40 MUHV {day0Number}1200Z
+FQCU40 MUHV {day0Number}{dayOrNight}00Z
 PRONÓSTICO METEOROLÓGICO PARA LOS MARES ADYACENTES A CUBA.
 CENTRO DE METEOROLOGÍA MARINA. INSTITUTO DE METEOROLOGÍA (CITMA).
 
@@ -169,8 +169,8 @@ Fecha: {dayNumber}/{monthNumber}/{yearNumber}\n
     oleajeAdvertencia:true,
     objectInfo : {isPhoto: true, encabezadoFontSize: 12, zonasFontSize: 12},
     titulo: "COSTAS DE CUBA",
-    archivoName:'FQC41.12.{day0Number}.{month0Number}.{yearNumber}',
-    encabezado: `FQCU41 MUHV {day0Number}1200Z
+    archivoName:'FQCU41.{dayOrNight}.{day0Number}.{month0Number}.{yearNumber}',
+    encabezado: `FQCU41 MUHV {day0Number}{dayOrNight}00Z
 PRONÓSTICO HIDROMETEOROLÓGICO PARA EL MAR TERRITORIAL DE CUBA    
 INSTITUTO DE METEOROLOGÍA, CENTRO DE METEOROLOGÍA MARINA, SECCIÓN DE PRONÓSTICOS HIDROMETEOROLÓGICOS (CITMA).
 ----------------------------------------------------------------------------------------------------------------------
@@ -427,14 +427,14 @@ Válido desde las 00:00 hasta las 24:00 horas del {fechaFin}.
     },
     {
       id:5,
-    info:`PRONÓSTICO MARINO PARA LA BAHÍA DEL MARIEL, VÁLIDO DESDE LAS 6 DE LA TARDE DE HOY {fechaInicio} HASTA LAS 6 DE LA TARDE DEL {fechaFin}.`,
+    info:`PRONÓSTICO MARINO PARA LA BAHÍA DEL MARIEL, VÁLIDO DESDE LAS 6 DE LA {tardeOrMorning} DE HOY {fechaInicioNoMonth} HASTA LAS 6 DE LA {tardeOrMorning} DEL {fechaFin}.`,
     isDayAndNight:true,
     insertGuion:false,
     oleajeAdvertencia:true,
     objectInfo : {isPhoto: true, encabezadoFontSize: 12, zonasFontSize: 12},
     titulo: "BAHÍA DEL MARIEL",
-    archivoName:'PRONOSTICO PARA LA BAHIA DEL MARIEL {day0Number}-{month0Number}-{yearNumber} (6 pm)',
-    encabezado: `PRONÓSTICO MARINO PARA LA BAHÍA DEL MARIEL, VÁLIDO DESDE LAS 6 DE LA TARDE DE HOY {fechaInicioNoMonth} HASTA LAS 6 DE LA TARDE DEL {fechaFin}.
+    archivoName:'PRONOSTICO PARA LA BAHIA DEL MARIEL {day0Number}-{month0Number}-{yearNumber} (6 {amOrPm})',
+    encabezado: `PRONÓSTICO MARINO PARA LA BAHÍA DEL MARIEL, VÁLIDO DESDE LAS 6 DE LA {tardeOrMorning} DE HOY {fechaInicioNoMonth} HASTA LAS 6 DE LA {tardeOrMorning} DEL {fechaFin}.
 --------------------------------------------------------------------------------------------------------------
 Datos del cliente: Sociedad Mercantil Servicios Marítimos Mariel vpoper@sm.co.cu, practicaje@sm.co.cu, pdireccion@sm.co.cu
 -------------------------------------------------------------------------------------------------------------
