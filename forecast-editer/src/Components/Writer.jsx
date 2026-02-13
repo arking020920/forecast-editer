@@ -5,6 +5,7 @@ import GuardarPronosticoButton from "./GuardarPronosticoButton";
 import ShortcutModal from "./ShortCutModal";
 import { replaceFunction } from "../hooks/useAAAListener";
 import { useTheme } from "../context/ToggleContext";
+import PronosticadorSelector from "./PronosticadorSelector";
 
 export default function Writer() {
   const {
@@ -12,7 +13,7 @@ export default function Writer() {
     fechaFin,
     fechaFin1,
     fechaFin2,
-    username,
+    userFirma,
     contenido,
     setContenido,
     currentZone, 
@@ -226,9 +227,9 @@ export default function Writer() {
       </div>
 
       {/* Footer */}
-      <p className="mt-6 text-sm text-gray-600 italic">
-        {pronosticoActual.cierre.replace("{username}", username)}
-      </p>
+      <PronosticadorSelector 
+      pronosticoActual={pronosticoActual}
+      ></PronosticadorSelector>
 
       {/* Modal de atajos */}
    {openShortcut && (

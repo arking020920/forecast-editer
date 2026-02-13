@@ -5,7 +5,8 @@ import { pronosticos } from "../data/pronosticos";
 import { replaceFunction } from "../hooks/useAAAListener";
 import { useTheme } from "../context/ToggleContext";
 export default function RenderPronostico() {
-  const { tipoDePronostico, fechaInicio, fechaFin, fechaFin1, fechaFin2, username, contenido, selected } = useForecast();
+  const { tipoDePronostico, fechaInicio, fechaFin, fechaFin1, fechaFin2, 
+    elaboratedBy, contenido, selected } = useForecast();
   const [open, setOpen] = useState(false);
   const {isDay} = useTheme()
   const pronosticoActual = pronosticos[tipoDePronostico][selected] || pronosticos.marino[selected];
@@ -53,7 +54,7 @@ export default function RenderPronostico() {
   });
 
   // Firma
-  const cierre = pronosticoActual.cierre.replace("{username}", username);
+  const cierre = pronosticoActual.cierre.replace("{username}", elaboratedBy);
 
   return (
     <>

@@ -1,4 +1,5 @@
 {
-  "admin": { "password": "1234" },
-  "juan": { "password": "abcd" }
+  "admin": { "password": "1234", "nombre": "Administrador", "firma" : "Admin"}, 
+  "armin.quintana": { "password": "armin020920", "nombre": "Armin de Jesús", "firma" : "A. Quintana"}, 
+  "roxana.martin": { "password": "lucuzupu", "nombre": "Roxana Martín", "firma" : "R. Martín"}
 }
