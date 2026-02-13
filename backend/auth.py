@@ -19,7 +19,9 @@ def login():
 
     users = load_users()
     user = users.get(username)
+    nombre = user["nombre"]
+    firma = user["firma"]
 
     if user and user["password"] == password:
-        return jsonify({"success": True, "user": username})
+        return jsonify({"success": True, "user": username, "nombre" : nombre, "firma" :  firma })
     return jsonify({"success": False, "message": "Credenciales inválidas"}), 401

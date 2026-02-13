@@ -1,29 +1,25 @@
 import { useState } from "react";
 import ModalLogin from "./Components/ModalLogin";
-import { ForecastProvider } from "./context/ForecastContext";
 import EditorLayout from "./Components/EditorLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar"; // 👈 Importamos el Navbar
-import { ThemeProvider } from "./context/ToggleContext";
-
+import { useForecast } from "./context/ForecastContext";
 function App() {
-  const [user, setUser] = useState(null);
+  const {username, setUsername, isLogin, userWelcomeName} = useForecast();
 
   // Si no hay usuario logueado, mostrar modal de login
-  if (!user) {
-    return <ModalLogin onLogin={setUser} />;
+  if (!username || !isLogin) {
+    return <ModalLogin onLogin={setUsername} />;
   }
 
   // Si hay usuario logueado, mostrar la aplicación completa
   return (
-    <ForecastProvider>
-      <ThemeProvider>
       <BrowserRouter>
         {/* Navbar siempre visible */}
         <Navbar />
 
         <div className="p-4">
-          <h1 className="text-xl font-bold mb-4">Bienvenido {user}</h1>
+          <h1 className="text-xl font-bold mb-4">Bienvenido {userWelcomeName}</h1>
           <Routes>
             <Route path="/editor" element={<EditorLayout />} />
             {/* 👇 puedes añadir más rutas según los links del Navbar */}
@@ -33,8 +29,6 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
-      </ThemeProvider>
-    </ForecastProvider>
   );
 }
 

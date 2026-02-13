@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useForecast } from "../context/ForecastContext";
 
 export default function ModalLogin({ onLogin }) {
-  const [username, setUsername] = useState("");
+  const {username, setUsername, setIsLogin, setUserWelcomeName, 
+    setUserFirma, setUserOriginalFirma,setTempSeleccion, setElaboratedBy} = useForecast() ;
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await fetch("http://127.0.0.1:5000/auth/login", {
@@ -14,12 +15,18 @@ export default function ModalLogin({ onLogin }) {
     });
     const data = await response.json();
     if (data.success) {
-      onLogin(data.user); // Guardar usuario en estado global
+      onLogin(data.user);
+      setIsLogin(true)
+      setUserWelcomeName(data.nombre)
+      setUserFirma(data.firma)
+      setUserOriginalFirma(data.firma)
+      setTempSeleccion([data.firma])
+      setElaboratedBy(data.firma)
+      // Guardar usuario en estado global
     } else {
       setError(data.message);
     }
   };
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50">
       <div className="bg-white p-6 rounded shadow-md w-80">
@@ -32,7 +39,7 @@ export default function ModalLogin({ onLogin }) {
             onChange={(e) => setUsername(e.target.value)}
             className="w-full mb-2 p-2 border rounded"
           />
-          <input
+          <input  
             type="password"
             placeholder="Contraseña"
             value={password}

@@ -5,7 +5,7 @@ import { pronosticos } from "../data/pronosticos";
 import { replaceFunction, separadorSaltoDeLinea } from "../hooks/useAAAListener";
 import { useTheme } from "../context/ToggleContext";
 export default function GuardarPronosticoButton() {
-  const { tipoDePronostico, fechaInicio, fechaFin,fechaFin1, fechaFin2, username, contenido, selected, guardarPronostico } = useForecast();
+  const { tipoDePronostico, fechaInicio, fechaFin,fechaFin1, fechaFin2, elaboratedBy, contenido, selected, guardarPronostico } = useForecast();
   const {isDay} = useTheme()
   const pronosticoActual = pronosticos[tipoDePronostico][selected] || pronosticos.marino[selected];
   const isMariel = pronosticoActual.id ==5 ? true : false
@@ -58,6 +58,10 @@ export default function GuardarPronosticoButton() {
         children: nombreSeparado,
         spacing: { before: 0, after: 0 },
       });
+      console.log(contenido)
+      console.log('ajskdhakjsdhaskj')
+      console.log(z.contenidoKey)
+      console.log(contenido[z.contenidoKey])
       const alignmentText = contenido[z.contenidoKey].length > 55 ? AlignmentType.JUSTIFIED : AlignmentType.LEFT;      
       const textZona = separadorSaltoDeLinea(contenido[z.contenidoKey], objectInfo, 'zonas', false, true, alignmentText)
       const texto = new Paragraph({
@@ -81,7 +85,7 @@ export default function GuardarPronosticoButton() {
     const cierre = new Paragraph({
       alignment: AlignmentType.JUSTIFIED,
       indent: { left: 0 }, // 👈 sin sangría
-      children: [new TextRun({ text: pronosticoActual.cierre.replace("{username}", username ), bold: true, font: "Arial", size: 24 })],
+      children: [new TextRun({ text: pronosticoActual.cierre.replace("{username}", elaboratedBy ), bold: true, font: "Arial", size: 24 })],
       spacing: { before: 0, after: 0 },
     });
     const nnnnMarady = new Paragraph({

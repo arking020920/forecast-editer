@@ -1,10 +1,25 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-
+import { useForecast } from "../context/ForecastContext";
 export default function ConfigModal({ username, shortcuts, onSave, onClose }) {
   const [newId, setNewId] = useState("");
   const [newPhrase, setNewPhrase] = useState("");
   const [openManage, setOpenManage] = useState(false);
+
+  // Nuevo: estado para pronosticadores
+  const [openPronosticadores, setOpenPronosticadores] = useState(false);
+  const {userFirma, setUserFirma, userOriginalFirma,
+     tempSeleccion, setTempSeleccion} = useForecast(); // string con los seleccionados
+  const [customPronosticadores, setCustomPronosticadores] = useState([]);
+  const [nuevoPronosticador, setNuevoPronosticador] = useState("");
+
+  // Array interno de meteorólogos disponibles
+  const pronosticadores = ["R. Martín", "A. Quintana", "L. Lavastida", "F. Mora", "H. Rodríguez"];
+
+  // Array externo derivado de userFirma
+  const arrayPronosticadoresForSelected = userFirma
+    ? userFirma.split(", ").filter((n) => n.trim() !== "")
+    : [];
 
   // Añadir un nuevo atajo
   const addShortcut = () => {
@@ -15,7 +30,7 @@ export default function ConfigModal({ username, shortcuts, onSave, onClose }) {
       alert("El número de atajo debe ser mayor o igual a 1");
       return;
     }
-    if (shortcuts.some(s => s.id === idNum)) {
+    if (shortcuts.some((s) => s.id === idNum)) {
       alert("Ya existe un atajo con ese número");
       return;
     }
@@ -59,98 +74,234 @@ export default function ConfigModal({ username, shortcuts, onSave, onClose }) {
     onSave(updated);
   };
 
+  // Toggle de checkboxes
+  const toggleSeleccion = (nombre) => {
+    setTempSeleccion((prev) => {
+      const copia = [...prev];
+      if (copia.includes(nombre)) {
+        return copia.filter((n) => n !== nombre);
+      } else {
+        return [...copia, nombre];
+      }
+    });
+  };
+
+  // Confirmar selección
+  const confirmarSeleccion = () => {
+    const nuevauserFirma = tempSeleccion.join(", ");
+    if (nuevauserFirma !== userFirma) {
+      setUserFirma(nuevauserFirma);
+    }
+    setOpenPronosticadores(false);
+  };
+
   return createPortal(
-     <div className="fixed inset-0 w-screen h-screen bg-black/70 flex items-center justify-center z-50">
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
-      <div className="bg-white p-6 rounded shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4">Configuración de Atajos</h2>
+    <div className="fixed inset-0 w-screen h-screen bg-black/70 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
+        <div className="bg-white p-6 rounded shadow-lg w-96">
+          <h2 className="text-xl font-bold mb-4">Configuración de Atajos</h2>
 
-        {/* Formulario para añadir nuevo atajo */}
-        <input
-          type="number"
-          placeholder="Número del atajo"
-          value={newId}
-          onChange={(e) => setNewId(e.target.value)}
-          className="border p-2 rounded w-full mb-2"
-        />
-        <input
-          type="text"
-          placeholder="Frase asociada"
-          value={newPhrase}
-          onChange={(e) => setNewPhrase(e.target.value)}
-          className="border p-2 rounded w-full mb-2"
-        />
-        <button
-          onClick={addShortcut}
-          className="bg-blue-600 text-white py-1 px-4 rounded hover:bg-blue-700 mb-4"
-        >
-          Añadir Atajo
-        </button>
-
-        {/* Botón para gestionar atajos existentes */}
-        {shortcuts.length > 0 && (
+          {/* Formulario para añadir nuevo atajo */}
+          <input
+            type="number"
+            placeholder="Número del atajo"
+            value={newId}
+            onChange={(e) => setNewId(e.target.value)}
+            className="border p-2 rounded w-full mb-2"
+          />
+          <input
+            type="text"
+            placeholder="Frase asociada"
+            value={newPhrase}
+            onChange={(e) => setNewPhrase(e.target.value)}
+            className="border p-2 rounded w-full mb-2"
+          />
           <button
-            onClick={() => setOpenManage(true)}
-            className="bg-gray-600 text-white py-1 px-4 rounded hover:bg-gray-700 mb-4"
+            onClick={addShortcut}
+            className="bg-blue-600 text-white py-1 px-4 rounded hover:bg-blue-700 mb-4 mr-4"
           >
-            Gestionar Atajos
+            Añadir Atajo
           </button>
-        )}
 
-        {/* Botón cerrar */}
-        <div className="flex justify-end space-x-2">
+          {/* Botón para gestionar atajos existentes */}
+          {shortcuts.length > 0 && (
+            <button
+              onClick={() => setOpenManage(true)}
+              className="bg-gray-600 text-white py-1 px-4 rounded hover:bg-gray-700 mb-4"
+            >
+              Gestionar Atajos
+            </button>
+          )}
+
+          {/* Botón para escoger pronosticadores */}
           <button
-            onClick={onClose}
-            className="bg-gray-500 text-white py-1 px-4 rounded hover:bg-gray-600"
+            onClick={() => {
+              setTempSeleccion(arrayPronosticadoresForSelected);
+              setOpenPronosticadores(true);
+            }}
+            className="bg-green-600 text-white py-1 px-4 rounded hover:bg-green-700 mb-4"
           >
-            Cerrar
+            Escoger Pronosticadores
           </button>
-        </div>
-      </div>
 
-      {/* Modal fullscreen de gestión */}
-      {openManage && (
-        <div className="fixed inset-0 w-screen h-screen bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white w-11/12 h-5/6 rounded shadow-lg p-8 flex flex-col">
-            <h2 className="text-2xl font-bold mb-6 text-center">Gestionar Atajos</h2>
-
-            <div className="flex-1 overflow-y-auto">
-              {shortcuts.map((s, i) => (
-                <div key={i} className="flex items-center space-x-2 mb-4">
-                  <input
-                    type="number"
-                    value={s.id}
-                    onChange={(e) => updateShortcut(i, "id", e.target.value)}
-                    className="w-20 border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    value={s.phrase}
-                    onChange={(e) => updateShortcut(i, "phrase", e.target.value)}
-                    className="flex-1 border p-2 rounded"
-                  />
-                  <button
-                    onClick={() => removeShortcut(i)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex justify-center mt-6">
-              <button
-                onClick={() => setOpenManage(false)}
-                className="bg-gray-600 text-white py-2 px-6 rounded hover:bg-gray-700"
-              >
-                Cerrar Gestión
-              </button>
-            </div>
+          {/* Botón cerrar */}
+          <div className="flex justify-end space-x-2">
+            <button
+              onClick={onClose}
+              className="bg-gray-500 text-white py-1 px-4 rounded hover:bg-gray-600"
+            >
+              Cerrar
+            </button>
           </div>
         </div>
-      )}
+
+        {/* Modal fullscreen de gestión */}
+        {openManage && (
+          <div className="fixed inset-0 w-screen h-screen bg-black/70 flex items-center justify-center z-50">
+            <div className="bg-white w-11/12 h-5/6 rounded shadow-lg p-8 flex flex-col">
+              <h2 className="text-2xl font-bold mb-6 text-center">
+                Gestionar Atajos
+              </h2>
+
+              <div className="flex-1 overflow-y-auto">
+                {shortcuts.map((s, i) => (
+                  <div key={i} className="flex items-center space-x-2 mb-4">
+                    <input
+                      type="number"
+                      value={s.id}
+                      onChange={(e) =>
+                        updateShortcut(i, "id", e.target.value)
+                      }
+                      className="w-20 border p-2 rounded"
+                    />
+                    <input
+                      type="text"
+                      value={s.phrase}
+                      onChange={(e) =>
+                        updateShortcut(i, "phrase", e.target.value)
+                      }
+                      className="flex-1 border p-2 rounded"
+                    />
+                    <button
+                      onClick={() => removeShortcut(i)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={() => setOpenManage(false)}
+                  className="bg-gray-600 text-white py-2 px-6 rounded hover:bg-gray-700"
+                >
+                  Cerrar Gestión
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de pronosticadores */}
+{openPronosticadores && (
+  <div className="fixed inset-0 w-screen h-screen bg-black/70 flex items-center justify-center z-50">
+    <div className="bg-white w-96 rounded shadow-lg p-6">
+      <h2 className="text-xl font-bold mb-4 text-center">
+        Seleccionar Pronosticadores
+      </h2>
+      <div className="space-y-2 max-h-64 overflow-y-auto">
+        {/* Default pronosticadores (no se pueden eliminar) */}
+        {pronosticadores.map((nombre, i) => {
+          if (nombre !== userOriginalFirma) {
+            return (
+              <label key={i} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={tempSeleccion.includes(nombre)}
+                  onChange={() => toggleSeleccion(nombre)}
+                />
+                <span>{nombre}</span>
+              </label>
+            );
+          }
+        })}
+
+        {/* Custom pronosticadores (sí se pueden eliminar) */}
+        {customPronosticadores.map((nombre, i) => (
+          <div key={`custom-${i}`} className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={tempSeleccion.includes(nombre)}
+              onChange={() => toggleSeleccion(nombre)}
+            />
+            <span>{nombre}</span>
+            <button
+              onClick={() => {
+                setCustomPronosticadores((prev) =>
+                  prev.filter((n) => n !== nombre)
+                );
+                setTempSeleccion((prev) =>
+                  prev.filter((n) => n !== nombre)
+                );
+              }}
+              className="text-red-500 hover:text-red-700"
+            >
+              🗑️
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Input para añadir nuevo pronosticador */}
+      <div className="flex space-x-2 mt-4">
+        <input
+          type="text"
+          placeholder="Nuevo pronosticador"
+          value={nuevoPronosticador}
+          onChange={(e) => setNuevoPronosticador(e.target.value)}
+          className="border p-2 rounded flex-1"
+        />
+        <button
+          onClick={() => {
+            if (
+              nuevoPronosticador.trim() &&
+              !pronosticadores.includes(nuevoPronosticador.trim()) &&
+              !customPronosticadores.includes(nuevoPronosticador.trim())
+            ) {
+              setCustomPronosticadores((prev) => [
+                ...prev,
+                nuevoPronosticador.trim(),
+              ]);
+              setNuevoPronosticador("");
+            }
+          }}
+          className="bg-green-600 text-white px-4 rounded hover:bg-green-700"
+        >
+          Añadir
+        </button>
+      </div>
+
+      <div className="flex justify-end space-x-2 mt-4">
+        <button
+          onClick={() => setOpenPronosticadores(false)}
+          className="bg-gray-500 text-white py-1 px-4 rounded hover:bg-gray-600"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={confirmarSeleccion}
+          className="bg-blue-600 text-white py-1 px-4 rounded hover:bg-blue-700"
+        >
+          Continuar
+        </button>
+      </div>
     </div>
-    </div>, document.body
-  );
+  </div>
+)}
+</div>
+</div>,
+document.body
+);
 }
