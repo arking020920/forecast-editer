@@ -55,6 +55,32 @@ export default function Writer() {
     bufferRef.current = bufferRef.current.slice(-3);
   }
 
+  // Avanzar a la siguiente zona con Ctrl + ArrowRight
+if (e.ctrlKey && e.key === "ArrowRight") {
+  // Borrar los 3 caracteres previos al cursor
+  const nuevo = actual.slice(0, cursorPos - 3) + actual.slice(cursorPos);
+  setContenido({ ...contenido, [key]: nuevo });
+
+  if (currentZone < zonas.length - 1) {
+    setCurrentZone(currentZone + 1);
+  }
+
+  e.preventDefault(); // evita que el navegador mueva el cursor
+}
+
+// Retroceder a la zona anterior con Ctrl + ArrowLeft
+if (e.ctrlKey && e.key === "ArrowLeft") {
+  const nuevo = actual.slice(0, cursorPos - 3) + actual.slice(cursorPos);
+  setContenido({ ...contenido, [key]: nuevo });
+
+  if (currentZone > 0) {
+    setCurrentZone(currentZone - 1);
+  }
+
+  e.preventDefault();
+}
+
+
   if (bufferRef.current === "aaa") {
 
     // borrar las tres letras "aaa" justo antes del cursor
