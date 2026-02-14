@@ -1,0 +1,98 @@
+import os
+import glob
+import xarray as xr
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+
+# Ruta de la carpeta donde están los GRIB2
+ruta = r"D:\Armin\Salva Diaria\forecast-editer\backend\gfsDatos"
+
+# Lista de áreas [lon_min, lon_max, lat_min, lat_max]
+areas = [
+    [-90, -60, 10, 30],   # ejemplo Caribe occidental
+    [-40, 0, 30, 60],     # ejemplo Atlántico norte
+]
+
+# Buscar todos los archivos GRIB2
+archivos = glob.glob(os.path.join(ruta, "gfswave.t12z.atlocn.0p16.f*.grib2"))
+archivos.sort()
+
+for area in areas:
+    lon_min, lon_max, lat_min, lat_max = area
+    # Crear carpeta para esta área
+    area_dir = os.path.join(ruta, f"area_{lon_min}_{lon_max}_{lat_min}_{lat_max}")
+    os.makedirs(area_dir, exist_ok=True)
+
+    # Subcarpetas
+    swh_dir = os.path.join(area_dir, "swh")
+    wind_dir = os.path.join(area_dir, "wind")
+    swhwind_dir = os.path.join(area_dir, "swhwind")
+    for d in [swh_dir, wind_dir, swhwind_dir]:
+        os.makedirs(d, exist_ok=True)
+
+    for archivo in archivos:
+        fname = os.path.basename(archivo)
+        fcode = os.path.splitext(fname)[0].split(".")[-1]  # f000, f001, etc.
+        outname = f"{fcode}.png"
+
+        print(f"Leyendo {archivo} para área {area}...")
+
+        ds = xr.open_dataset(archivo, engine="cfgrib")
+
+        # Variables
+        hs = ds["swh"] if "swh" in ds.variables else None
+        u10 = ds["u10"] if "u10" in ds.variables else None
+        v10 = ds["v10"] if "v10" in ds.variables else None
+
+        # Recorte espacial
+        if hs is not None:
+            hs = hs.sel(longitude=slice(lon_min, lon_max), latitude=slice(lat_min, lat_max))
+        if u10 is not None and v10 is not None:
+            u10 = u10.sel(longitude=slice(lon_min, lon_max), latitude=slice(lat_min, lat_max))
+            v10 = v10.sel(longitude=slice(lon_min, lon_max), latitude=slice(lat_min, lat_max))
+
+        # --- Gráfico SWH ---
+        if hs is not None:
+            fig = plt.figure(figsize=(8, 6))
+            ax = plt.axes(projection=ccrs.PlateCarree())
+            ax.set_extent([lon_min, lon_max, lat_min, lat_max])
+            ax.add_feature(cfeature.LAND.with_scale("10m"), facecolor="lightgray")
+            ax.add_feature(cfeature.COASTLINE.with_scale("10m"))
+            im = hs.plot(ax=ax, transform=ccrs.PlateCarree(),
+                         cmap="viridis", cbar_kwargs={"label": "Altura de ola (m)"})
+            plt.title(f"SWH {fcode}")
+            plt.savefig(os.path.join(swh_dir, outname), dpi=150, bbox_inches="tight")
+            plt.close(fig)
+
+        # --- Gráfico viento ---
+        if u10 is not None and v10 is not None:
+            fig = plt.figure(figsize=(8, 6))
+            ax = plt.axes(projection=ccrs.PlateCarree())
+            ax.set_extent([lon_min, lon_max, lat_min, lat_max])
+            ax.add_feature(cfeature.LAND.with_scale("10m"), facecolor="lightgray")
+            ax.add_feature(cfeature.COASTLINE.with_scale("10m"))
+            ax.barbs(u10.longitude.values, u10.latitude.values,
+                     u10.values, v10.values,
+                     length=5, transform=ccrs.PlateCarree())
+            plt.title(f"Viento {fcode}")
+            plt.savefig(os.path.join(wind_dir, outname), dpi=150, bbox_inches="tight")
+            plt.close(fig)
+
+        # --- Gráfico combinado SWH + viento ---
+        if hs is not None and u10 is not None and v10 is not None:
+            fig = plt.figure(figsize=(8, 6))
+            ax = plt.axes(projection=ccrs.PlateCarree())
+            ax.set_extent([lon_min, lon_max, lat_min, lat_max])
+            ax.add_feature(cfeature.LAND.with_scale("10m"), facecolor="lightgray")
+            ax.add_feature(cfeature.COASTLINE.with_scale("10m"))
+            hs.plot(ax=ax, transform=ccrs.PlateCarree(),
+                    cmap="viridis", cbar_kwargs={"label": "Altura de ola (m)"})
+            ax.barbs(u10.longitude.values, u10.latitude.values,
+                     u10.values, v10.values,
+                     length=5, transform=ccrs.PlateCarree(), color="black")
+            plt.title(f"SWH + Viento {fcode}")
+            plt.savefig(os.path.join(swhwind_dir, outname), dpi=150, bbox_inches="tight")
+            plt.close(fig)
+
+        ds.close()
