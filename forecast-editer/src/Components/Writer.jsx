@@ -28,7 +28,7 @@ export default function Writer() {
   const isMariel = pronosticoActual.id ==5 ? true : false
   const zonas = pronosticoActual.zonas;
   const vCosta = [0, 7, 10, 19, 28, 37, 46, 57]
-  const oCosta = [{},{nombre:'Mar tranquila', valor:'inferiores a 0.5 metros (fzas 1 y 2)'},
+  const oCosta = [{},{nombre:'Mar tranquila', valor:'inferiores o iguales a 0.5 metros (fzas 1 y 2)'},
     {nombre:'Mar tranquila', valor:'inferiores a 0.5 metros (fzas 1 y 2)'},
   {nombre:'Poco oleaje', valor:'entre 0.5 - 1.0 metro (fza 3)'}, {nombre:'Oleaje', valor:'entre 1.0 - 1.5 metros (fza 4)'},
   {nombre:'Marejadas', valor:'entre 1.5 - 2.5 metros (fza 5)'}, {nombre:'Fuertes Marejadas', valor:'entre 2.5 - 4.0 metros (fza 6)'}      
@@ -57,22 +57,14 @@ export default function Writer() {
 
   // Avanzar a la siguiente zona con Ctrl + ArrowRight
 if (e.ctrlKey && e.key === "ArrowRight") {
-  // Borrar los 3 caracteres previos al cursor
-  const nuevo = actual.slice(0, cursorPos - 3) + actual.slice(cursorPos);
-  setContenido({ ...contenido, [key]: nuevo });
-
   if (currentZone < zonas.length - 1) {
     setCurrentZone(currentZone + 1);
   }
-
   e.preventDefault(); // evita que el navegador mueva el cursor
 }
 
 // Retroceder a la zona anterior con Ctrl + ArrowLeft
 if (e.ctrlKey && e.key === "ArrowLeft") {
-  const nuevo = actual.slice(0, cursorPos - 3) + actual.slice(cursorPos);
-  setContenido({ ...contenido, [key]: nuevo });
-
   if (currentZone > 0) {
     setCurrentZone(currentZone - 1);
   }
