@@ -4,14 +4,10 @@ import { useForecast } from "../context/ForecastContext"; // para obtener fechas
 import { pronosticos } from "../data/pronosticos";
 import { replaceFunction } from "../hooks/useAAAListener";
 import { routesOfMaritima } from "../data/routesOfMaritima";
-import { useTheme } from "../context/ToggleContext";
 export default function Descargador() {
   // si manejas fechas en el contexto ForecastProvider, las tomamos de ahí
-    const { fechaInicio, fechaFin, fechaFin1, fechaFin2, tipoDePronostico,selected } = useForecast();
-    const pronosticoActual = pronosticos[tipoDePronostico][selected] || pronosticos.marino[selected];
-    const {isDay} = useTheme()
-    const isMariel = pronosticoActual.id ==5 ? true : false
-    const { taskList, actualizarTareas, loading, toggleManual } = useTasks({ fechaInicio, fechaFin, fechaFin1, fechaFin2, pronosticoActual, isDay, isMariel });
+    const { fechaInicio, fechaFin, fechaFin1, fechaFin2 } = useForecast();
+    const { taskList, actualizarTareas, loading, toggleManual } = useTasks({ fechaInicio, fechaFin, fechaFin1, fechaFin2});
     const now = new Date();
     const yearNumber = now.getFullYear(); // e.g. 2026
     const monthCapitalized = now.toLocaleString("es-ES", { month: "long" }).replace(/^./, s => s.toUpperCase()); // e.g. "Febrero"
@@ -51,8 +47,10 @@ export default function Descargador() {
           {taskList.map(task => {
             let nameOfsaveTask=''
             let routesName=''
+            
             if(task.name || task.name===0){
-                nameOfsaveTask = replaceFunction(pronosticos.marino[task.name].archivoName,fechaInicio, fechaFin, fechaFin1, fechaFin2, pronosticoActual.isDayAndNight, isDay, isMariel)
+                const isMariel = task.name == 5 ? true : false
+                nameOfsaveTask = replaceFunction(pronosticos.marino[task.name].archivoName,fechaInicio, fechaFin, fechaFin1, fechaFin2, pronosticos.marino[task.name].isDayAndNight, task.isDay, isMariel)
                 routesName = routesOfMaritima[task.name]}
             if(task.id==='marady-noche'){
                 routesName = routesOfMaritima[6]

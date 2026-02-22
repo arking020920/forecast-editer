@@ -9,6 +9,7 @@ export const tareas = [
     filePattern: false,
     name: 0,
     route: "Hombres del mar",
+    isDay:true
   },
 
   // 1 Marady Día + salvados (saveInRed)
@@ -20,6 +21,7 @@ export const tareas = [
     filePattern: true,
     name: 1,
     route: "Marady FQCU40.12",
+    isDay:true
   },
   {
     id: "salvar-fqc40-dia",
@@ -27,7 +29,8 @@ export const tareas = [
     deadline: "1:00 PM",
     type: "saveInRed",
     filePattern: true,
-    fileName: "FQC40.docx",
+    fileName: "FQCU40.12.docx",
+    isDay:true,
     routes: ["\\\\10.0.22.182\\ftp\\Pron-Nac", "\\\\10.0.22.182\\ftp\\telex"]
   },
   {
@@ -37,6 +40,7 @@ export const tareas = [
     type: "saveInRed",
     filePattern: true,
     fileName: "Marady.txt",
+    isDay:true,
     routes: ["\\\\10.0.22.182\\ftp\\Pron-Nac", "\\\\10.0.22.182\\ftp\\telex"]
   },
 
@@ -48,7 +52,8 @@ export const tareas = [
     type: "save",
     filePattern: true,
     name: 2,
-    route: "Costa FQCU41.12"
+    route: "Costa FQCU41.12",
+    isDay:true
   },
   {
     id: "salvar-fqc41-dia",
@@ -56,7 +61,8 @@ export const tareas = [
     deadline: "1:30 PM",
     type: "saveInRed",
     filePattern: true,
-    fileName: "FQC41.docx",
+    fileName: "FQCU41.12.docx",
+    isDay:true,
     routes: ["\\\\10.0.22.182\\ftp\\Pron-Nac", "\\\\10.0.22.182\\ftp\\telex"]
   },
 
@@ -68,7 +74,8 @@ export const tareas = [
     type: "save",
     filePattern: false,
     name: 3,
-    route: "CARIBE"
+    route: "CARIBE",
+    isDay:true
   },
   {
     id: "correo-caribe",
@@ -86,7 +93,8 @@ export const tareas = [
     type: "save",
     filePattern: false,
     name: 4,
-    route: "TGF"
+    route: "TGF",
+    isDay:true
   },
   {
     id: "correo-guardafronteras",
@@ -104,7 +112,8 @@ export const tareas = [
     type: "save",
     filePattern: false,
     name: 5,
-    route: "Mariel 6 PM"
+    route: "Mariel 6 PM",
+    isDay:true
   },
   {
     id: "correo-mariel-tarde",
@@ -122,7 +131,8 @@ export const tareas = [
     type: "save",
     filePattern: true,
     name: 1,
-    route: "Marady FQCU40.00"
+    route: "Marady FQCU40.00",
+    isDay:false
   },
   {
     id: "salvar-fqc40-noche",
@@ -130,7 +140,8 @@ export const tareas = [
     deadline: "1:00 AM",
     type: "saveInRed",
     filePattern: true,
-    fileName: "FQC40.docx",
+    isDay:false,
+    fileName: "FQCU40.00.docx",
     routes: ["\\\\10.0.22.182\\ftp\\Pron-Nac", "\\\\10.0.22.182\\ftp\\telex"]
   },
   {
@@ -140,6 +151,7 @@ export const tareas = [
     type: "saveInRed",
     filePattern: true,
     fileName: "Marady.txt",
+    isDay:false,
     routes: ["\\\\10.0.22.182\\ftp\\Pron-Nac", "\\\\10.0.22.182\\ftp\\telex"]
   },
 
@@ -151,7 +163,8 @@ export const tareas = [
     type: "save",
     filePattern: true,
     name: 2,
-    route: "Costa FQCU41.00"
+    route: "Costa FQCU41.00",
+    isDay:false
   },
   {
     id: "salvar-fqc41-noche",
@@ -159,7 +172,8 @@ export const tareas = [
     deadline: "1:30 AM",
     type: "saveInRed",
     filePattern: true,
-    fileName: "FQC41.docx",
+    fileName: "FQCU41.00.docx",
+    isDay:false,
     routes: ["\\\\10.0.22.182\\ftp\\Pron-Nac", "\\\\10.0.22.182\\ftp\\telex"]
   },
 
@@ -171,7 +185,8 @@ export const tareas = [
     type: "save",
     filePattern: false,
     name: 5,
-    route: "Mariel 6 AM"
+    route: "Mariel 6 AM",
+    isDay:false,
   },
   {
     id: "correo-mariel-manana",
