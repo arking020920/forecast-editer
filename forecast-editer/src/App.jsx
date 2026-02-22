@@ -4,6 +4,7 @@ import EditorLayout from "./Components/EditorLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar"; // 👈 Importamos el Navbar
 import { useForecast } from "./context/ForecastContext";
+import Descargador from "./Components/Descargador";
 function App() {
   const {username, setUsername, isLogin, userWelcomeName} = useForecast();
 
@@ -23,7 +24,7 @@ function App() {
           <Routes>
             <Route path="/editor" element={<EditorLayout />} />
             {/* 👇 puedes añadir más rutas según los links del Navbar */}
-            <Route path="/descargador" element={<div>Descargador de Datos</div>} />
+            <Route path="/descargador" element={<Descargador />} />
             <Route path="/info" element={<div>Información</div>} />
             <Route path="/acerca" element={<div>Acerca de la aplicación</div>} />
           </Routes>

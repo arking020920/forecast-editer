@@ -66,3 +66,9 @@ watchdog==4.0.0
 Werkzeug==3.1.5
 xarray==2025.6.1
 xyzservices==2025.1.0
+python-docx
+docx2txt
+regex
+chardet
+pysmb
+

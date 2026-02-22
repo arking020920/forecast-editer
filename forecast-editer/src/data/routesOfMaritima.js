@@ -1,0 +1,1 @@
+export const routesOfMaritima=['Hombres del mar','Marady FQCU40.12','Costa FQCU41.12','CARIBE','TGF','Mariel 6 PM','Marady FQCU40.00','Costa FQCU41.00','Mariel 6 AM']
