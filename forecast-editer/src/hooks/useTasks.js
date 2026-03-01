@@ -7,6 +7,7 @@ import { pronosticos } from "../data/pronosticos";
 import { replaceFunction } from "./useAAAListener";
 import { routesOfMaritima } from "../data/routesOfMaritima";
 
+
 export function useTasks({ fechaInicio, fechaFin, fechaFin1, fechaFin2, isMariel }) {
   const [taskList, setTaskList] = useState(initialTasks.map(t => ({ ...t, status: "unknown", details: null })));
   const [loading, setLoading] = useState(false);
@@ -79,14 +80,15 @@ export function useTasks({ fechaInicio, fechaFin, fechaFin1, fechaFin2, isMariel
             const fullPath = `${base}\\${nameOfsaveTask}.docx`;
             // Llamada al backend
             const res = await checkSave({ fullPath });
-            return { id: task.id, status: res.exists ? "done" : "missing", details: { ...res, nameOfsaveTask, routesName } };
+            return { id: task.id, status: res.exists ? "done" : "missing", details: { ...res, nameOfsaveTask, routesName }, fullPath: fullPath, type:task.type };
           }
           
 
         if (task.type === "saveInRed") {
           // expectedPattern: MUHV{day0}{dayOrNight}00 (frontend builds)
-          const day0 = fechaInicio.getDate() < 10 ? `0${fechaInicio.getDate()}` : `${fechaInicio.getDate()}`;
           const dayOrNight = task.isDay ? "12" : "00";
+          const sumForNight = task.isDay ? 0 : 1
+          const day0 = fechaInicio.getDate() < 10 ? `0${fechaInicio.getDate()+sumForNight}` : `${fechaInicio.getDate()+sumForNight}`;
           const expectedPattern = `MUHV\\s*${day0}${dayOrNight}00.*`;
           console.log(task.fileName, expectedPattern, 'aaa')
           const res = await checkSaveInRed({ fileName: task.fileName, routes: task.routes, expectedPattern });
@@ -102,11 +104,11 @@ export function useTasks({ fechaInicio, fechaFin, fechaFin1, fechaFin2, isMariel
 
     setTaskList(prev => prev.map(t => {
       const r = results.find(x => x.id === t.id);
-      return r ? { ...t, status: r.status, details: r.details } : t;
+      return r ? { ...t, status: r.status, details: r.details, fullPath: r.fullPath, type: r.type } : t;
     }));
 
     setLoading(false);
   }
 
-  return { taskList, actualizarTareas, loading, toggleManual, setTaskList };
+  return { taskList, actualizarTareas, loading, toggleManual, setTaskList,  };
 }

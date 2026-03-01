@@ -4,6 +4,7 @@ import { useForecast } from "../context/ForecastContext"; // para obtener fechas
 import { pronosticos } from "../data/pronosticos";
 import { replaceFunction } from "../hooks/useAAAListener";
 import { routesOfMaritima } from "../data/routesOfMaritima";
+import { GeneradorInforme } from "./GeneradorInforme";
 export default function Descargador() {
   // si manejas fechas en el contexto ForecastProvider, las tomamos de ahí
     const { fechaInicio, fechaFin, fechaFin1, fechaFin2 } = useForecast();
@@ -104,6 +105,7 @@ export default function Descargador() {
             </li>)
           })}
         </ul>
+        <GeneradorInforme taskList={taskList}></GeneradorInforme>
       </section>
     </div>
   );

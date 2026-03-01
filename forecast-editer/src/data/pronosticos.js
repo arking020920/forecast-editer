@@ -232,16 +232,17 @@ Fecha: {dayNumber}/{monthNumber}/{yearNumber}\n
     titulo: "CARIBE",
     archivoName:'CARIBE.{day0Number}.{month0Number}.{yearNumber}',
     encabezado: `PRONOSTICO ESPECIALIZADO DE LAS COSTAS DE CUBA PARA LA EMPRESA DE NAVEGACIÓN CARIBE. 
-INSTITUTO DE METEOROLOGÍA, CENTRO DE METEOROLOGÍA MARINA, SECCIÓN DE PRONÓSTICOS HIDROMETOROLÓGICOS.
---------------------------------------------------------------------------------------------------------------------
-e-mail: pmando@navcar.transnet.cu,Yoan Manuel J. P Mando 
-(jpmando@navcar.transnet.cu)
-Teléfono: 7698-0182 EXT. 1188                 
---------------------------------------------------------------------------------------------------------------------
-FECHA: {dayNumber}/{monthNumber}/{yearNumber}                                                               HORA: 15:00 Local.
---------------------------------------------------------------------------------------------------------------------
-Válido desde las 00:00 hasta las 24:00 horas del {fechaFin}.
---------------------------------------------------------------------------------------------------------------------`,
+    INSTITUTO DE METEOROLOGÍA, CENTRO DE METEOROLOGÍA MARINA, SECCIÓN DE PRONÓSTICOS HIDROMETOROLÓGICOS.
+    --------------------------------------------------------------------------------------------------------------------
+    Para mercedesvega@navcar.transnet.cu, pmando@navcar.transnet.cu,
+    cc liset.abreu@insmet.cu
+    Teléfono: 7698-0182 EXT. 1188                 
+    --------------------------------------------------------------------------------------------------------------------
+    FECHA: {dayNumber}/{monthNumber}/{yearNumber}                                                               HORA: 15:00 Local.
+    --------------------------------------------------------------------------------------------------------------------
+    Válido desde las 00:00 hasta las 24:00 horas del {fechaFin}
+    --------------------------------------------------------------------------------------------------------------------
+    `,
     zonas: [
       {
         bloque: "SITUACIÓN SINÓPTICA SIGNIFICATIVA",
