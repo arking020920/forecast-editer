@@ -4,15 +4,17 @@ from auth import auth_bp
 from config import config_bp
 from saveload import saveLoad_bp
 from actualizarTareas import actualizar_tareas_bp
+from pdf_generator_bp import pdf_bp
 
 app = Flask(__name__)
 app.secret_key = "clave_super_secreta"
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}}, allow_headers="*", methods=["GET", "POST", "OPTIONS"])
 
 app.register_blueprint(auth_bp, url_prefix="/auth")
 app.register_blueprint(config_bp, url_prefix="/")
 app.register_blueprint(saveLoad_bp, url_prefix="/pronosticos")
 app.register_blueprint(actualizar_tareas_bp)
+app.register_blueprint(pdf_bp)
 
 @app.route("/")
 def home():

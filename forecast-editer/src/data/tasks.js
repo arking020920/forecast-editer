@@ -33,6 +33,7 @@ export const tareas = [
     isDay:true,
     routes: ["\\\\10.0.22.182\\ftp\\Pron-Nac", "\\\\10.0.22.182\\ftp\\telex"]
   },
+  /*
   {
     id: "salvar-marady-dia",
     text: "Salvar Marady.txt en Pron-Nac y en telex",
@@ -42,7 +43,7 @@ export const tareas = [
     fileName: "Marady.txt",
     isDay:true,
     routes: ["\\\\10.0.22.182\\ftp\\Pron-Nac", "\\\\10.0.22.182\\ftp\\telex"]
-  },
+  },*/
 
   // 2 Costas Día + salvar FQC41
   {
@@ -144,16 +145,17 @@ export const tareas = [
     fileName: "FQCU40.00.docx",
     routes: ["\\\\10.0.22.182\\ftp\\Pron-Nac", "\\\\10.0.22.182\\ftp\\telex"]
   },
+  /*
   {
     id: "salvar-marady-noche",
     text: "Salvar Marady.txt en Pron-Nac y en telex",
     deadline: "1:00 AM",
     type: "saveInRed",
-    filePattern: true,
+    filePattern: false,
     fileName: "Marady.txt",
     isDay:false,
     routes: ["\\\\10.0.22.182\\ftp\\Pron-Nac", "\\\\10.0.22.182\\ftp\\telex"]
-  },
+  },*/
 
   // Costas Noche + salvar FQC41
   {

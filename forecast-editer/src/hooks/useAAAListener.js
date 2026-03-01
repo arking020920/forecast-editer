@@ -4,7 +4,7 @@ export const replaceFunction = (texto, fechaInicio, fechaFin, fechaFin1, fechaFi
   const dayOrNight = isDay ? '12' : '00'
   const tardeOrMorning = isDay ? 'TARDE' : 'MAÑANA'
   const amOrPm = isDay ? 'pm' : 'am'
-    function isNowBetweenMidnightAnd0730() {
+  function isNowBetweenMidnightAnd0730() {
   const now = new Date();
   const minutesNow = now.getHours() * 60 + now.getMinutes();
   const start = 0;           // 00:00 en minutos
