@@ -1,35 +1,25 @@
 // src/components/Descargador.jsx
 import { useTasks } from "../hooks/useTasks";
-import { useForecast } from "../context/ForecastContext"; // para obtener fechas si las tienes en el contexto
+import { useForecast } from "../context/ForecastContext";
 import { pronosticos } from "../data/pronosticos";
 import { replaceFunction } from "../hooks/useAAAListener";
 import { routesOfMaritima } from "../data/routesOfMaritima";
 import { GeneradorInforme } from "./GeneradorInforme";
-export default function Descargador() {
-  // si manejas fechas en el contexto ForecastProvider, las tomamos de ahí
-    const { fechaInicio, fechaFin, fechaFin1, fechaFin2 } = useForecast();
-    const { taskList, actualizarTareas, loading, toggleManual } = useTasks({ fechaInicio, fechaFin, fechaFin1, fechaFin2});
-    const now = new Date();
-    const yearNumber = now.getFullYear(); // e.g. 2026
-    const monthCapitalized = now.toLocaleString("es-ES", { month: "long" }).replace(/^./, s => s.toUpperCase()); // e.g. "Febrero"
+import GestorDescargas from "./Descargas/GestorDescargas"; // <--- nuevo componente
 
+export default function Descargador() {
+  const { fechaInicio, fechaFin, fechaFin1, fechaFin2 } = useForecast();
+  const { taskList, actualizarTareas, loading, toggleManual } = useTasks({ fechaInicio, fechaFin, fechaFin1, fechaFin2 });
+  const now = new Date();
+  const yearNumber = now.getFullYear();
+  const monthCapitalized = now.toLocaleString("es-ES", { month: "long" }).replace(/^./, s => s.toUpperCase());
+
+  const arrayDeUrls = [["http://localhost:5000/download-gfswave",'GFS-WAVE DATA','gfs-wave']];
 
   return (
     <div className="grid grid-cols-2 gap-6 p-6 bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen">
       {/* Columna izquierda: gestor de descargas */}
-      <section className="bg-white shadow-lg rounded-lg p-4 border border-blue-200">
-        <h2 className="text-2xl font-bold text-blue-700 mb-4">Gestor de Descargas</h2>
-        <ul className="space-y-3">
-          <li className="flex justify-between items-center bg-blue-50 p-3 rounded-md">
-            <span>Archivo GRIB2 - Viento</span>
-            <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Descargar</button>
-          </li>
-          <li className="flex justify-between items-center bg-blue-50 p-3 rounded-md">
-            <span>Archivo GRIB2 - Olas</span>
-            <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Descargar</button>
-          </li>
-        </ul>
-      </section>
+      <GestorDescargas arrayDeUrls={arrayDeUrls} />
 
       {/* Columna derecha: lista de tareas */}
       <section className="bg-white shadow-lg rounded-lg p-4 border border-blue-200">
