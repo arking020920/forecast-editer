@@ -33,3 +33,11 @@
     background-color: #9ee3fb;
   }
 }
+@keyframes wave {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: -1000px;
+  }
+}
