@@ -26,6 +26,11 @@ export const ForecastProvider = ({ children }) => {
   const [userOriginalFirma, setUserOriginalFirma] = useState("")
   const [tempSeleccion, setTempSeleccion] = useState([userFirma]);
   const [elaboratedBy, setElaboratedBy] = useState(userFirma);
+  const [cubaOrMarady, setCubaOrMarady] = useState(0)
+  const [mapasZonas, setMapasZonas]=useState(0)
+  const [variables, setVariables]=useState(0)
+  const [ultimaInfo, setUltimaInfo] = useState('')
+  const [fechasMapas, setFechasMapas] =useState('16.04.2026.06utc')
   //const [pronosticoDatabase, setPronosticoDatabase] = useState({})
   const structure = []
   useEffect(()=>{
@@ -138,7 +143,17 @@ const handleLoad = async () => {
         tempSeleccion,
         setTempSeleccion,
         elaboratedBy,
-        setElaboratedBy
+        setElaboratedBy,
+        cubaOrMarady,
+        setCubaOrMarady,
+        mapasZonas,
+        setMapasZonas,
+        variables,
+        setVariables,
+        fechasMapas,
+        setFechasMapas,
+        ultimaInfo,
+        setUltimaInfo
       }}
     >
       {children}

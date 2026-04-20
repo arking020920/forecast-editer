@@ -199,11 +199,11 @@
   ],
   "armin.quintana": [
     {
-      "zona1": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3) que aumentará temporalmente en la noche hasta la mañana del día 16 a Oleaje con olas entre 1.0 - 1.5 metros (fza 4) desde cabo San Antonio hasta punta Gobernadora.",
-      "zona2": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3), excepto desde cayo Romano hasta punta Maternillos donde habrá Oleaje con olas entre 1.0 - 1.5 metros (fza 4).",
-      "zona3": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nOleaje con olas entre 1.0 - 1.5 metros (fza 4).",
-      "zona4": "Variable entre 10 - 19 km/h (fza 3), excepto al sur de Guantánamo donde estará del Noreste al Este entre 19 - 28 km/h (fza 4).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
-      "zona5": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3). En los golfos de Batabanó, Ana María y Guacanayabo la mar permanecerá Tranquila con olas inferiores a 0.5 metros (fzas 1 y 2). En zonas de Oleaje la navegación será peligrosa para embarcaciones pequeñas"
+      "zona1": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4) que a finales de la mañana del día 21 aumentará hasta 28 - 37 km/h (fza 5).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3) que a finales de la noche aumentará hasta Oleaje con olas entre 1.0 - 1.5 metros (fza 4), llegando a Marejadas con olas entre 1.5 - 2.5 metros (fza 5) a mediados de la mañana del día 21.",
+      "zona2": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2) que a finales de la noche aumentará hasta Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
+      "zona3": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2) que en la noche aumentará a Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
+      "zona4": "Variable entre 10 - 19 km/h (fza 3), excepto al sur de Guantánamo donde estará del Noreste al Este entre 10 - 19 km/h (fza 3).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2), excepto al sureste de Guantánamo donde habrá Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
+      "zona5": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2) que en la madrugada aumentará hasta Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3), llegando a Oleaje con olas entre 1.0 - 1.5 metros (fza 4) al sur de la península de Guanahacabibes y el archipiélago de los Canarreos. En los golfos de Batabanó, Ana María y Guacanayabo la mar permanecerá Tranquila con olas inferiores a 0.5 metros (fzas 1 y 2). En zonas de Oleaje y Marejadas la navegación será peligrosa para embarcaciones menores."
     },
     {
       "zona1": "",
@@ -221,28 +221,28 @@
       "zona13": ""
     },
     {
-      "zona1": "Influencia de las altas presiones.",
-      "zona2": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3) que aumentará a Oleaje durante la noche.",
-      "zona3": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3), excepto desde cayo Romano hasta punta Maternillos donde habrá Oleaje con olas entre 1.0 - 1.5 metros (fza 4) que a finales de la tarde disminuirá a Poco oleaje.",
-      "zona4": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nOleaje con olas entre 1.0 - 1.5 metros (fza 4) que en la noche disminuirá a Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
-      "zona5": "Variable entre 10 - 19 km/h (fza 3), excepto al sur de Guantánamo donde estará del Noreste al Este entre 19 - 28 km/h (fza 4) que a finales de la mañana pasará a ser Variable disminuyendo hasta 10 - 19 km/h (fza 3).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2), excepto desde punta Caleta hasta punta Maisí donde habrá Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
-      "zona6": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4), que durante la tarde temporalmente pasará a ser Variable disminuyendo hasta 10 - 19 km/h (fza 3).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3) que en la tarde disminuirá a Mar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2), excepto en los golfos de Batabanó, Ana María y Guacanayabo donde la mar permanecerá Tranquila."
+      "zona1": "",
+      "zona2": "",
+      "zona3": "",
+      "zona4": "",
+      "zona5": "",
+      "zona6": ""
     },
     {
-      "zona1": "Influencia de las altas presiones.",
-      "zona2": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3) que aumentará a Oleaje durante la noche.",
-      "zona3": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3), excepto desde cayo Romano hasta punta Maternillos donde habrá Oleaje con olas entre 1.0 - 1.5 metros (fza 4) que a finales de la tarde disminuirá a Poco oleaje.",
-      "zona4": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nOleaje con olas entre 1.0 - 1.5 metros (fza 4) que en la noche disminuirá a Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
-      "zona5": "Variable entre 10 - 19 km/h (fza 3), excepto al sur de Guantánamo donde estará del Noreste al Este entre 19 - 28 km/h (fza 4) que a finales de la mañana pasará a ser Variable disminuyendo hasta 10 - 19 km/h (fza 3).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2), excepto desde punta Caleta hasta punta Maisí donde habrá Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
-      "zona6": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4), que durante la tarde temporalmente pasará a ser Variable disminuyendo hasta 10 - 19 km/h (fza 3).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3) que en la tarde disminuirá a Mar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2), excepto en los golfos de Batabanó, Ana María y Guacanayabo donde la mar permanecerá Tranquila."
+      "zona1": "",
+      "zona2": "",
+      "zona3": "",
+      "zona4": "",
+      "zona5": "",
+      "zona6": ""
     },
     {
-      "zona1": "Influencia de las altas presiones.",
-      "zona2": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3) que aumentará a Oleaje durante la noche.",
-      "zona3": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3), excepto desde cayo Romano hasta punta Maternillos donde habrá Oleaje con olas entre 1.0 - 1.5 metros (fza 4) que a finales de la tarde disminuirá a Poco oleaje.",
-      "zona4": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nOleaje con olas entre 1.0 - 1.5 metros (fza 4) que en la noche disminuirá a Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
-      "zona5": "Variable entre 10 - 19 km/h (fza 3), excepto al sur de Guantánamo donde estará del Noreste al Este entre 19 - 28 km/h (fza 4) que a finales de la mañana pasará a ser Variable disminuyendo hasta 10 - 19 km/h (fza 3).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2), excepto desde punta Caleta hasta punta Maisí donde habrá Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
-      "zona6": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4), que durante la tarde temporalmente pasará a ser Variable disminuyendo hasta 10 - 19 km/h (fza 3).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3) que en la tarde disminuirá a Mar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2), excepto en los golfos de Batabanó, Ana María y Guacanayabo donde la mar permanecerá Tranquila.",
+      "zona1": "",
+      "zona2": "",
+      "zona3": "",
+      "zona4": "",
+      "zona5": "",
+      "zona6": "",
       "zona7": "",
       "zona8": "",
       "zona9": "",

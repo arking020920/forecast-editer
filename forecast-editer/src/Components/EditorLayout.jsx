@@ -1,6 +1,6 @@
 import EditorNavbar from "./EditorNavbar";
 import Writer from "./Writer";
-import Sidebar from "./Sidebar";
+import Sidebar from "./Sidebar/Sidebar.jsx";
 
 export default function EditorLayout() {
   return (
