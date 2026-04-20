@@ -22,7 +22,8 @@ def check_progress():
         # Contar archivos presentes
         files = sorted(os.listdir(folder_path))
         total_expected = 97   # ejemplo: 4 días a 1h = 96 archivos
-        downloaded = len(files)
+        grib2_files = [f for f in files if f.endswith(".grib2")]
+        downloaded = len(grib2_files)
 
         progress = int(downloaded / total_expected * 100)
 

@@ -1,12 +1,13 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect} from "react";
 import LoadingSpinner from "./LoadingIcon";
 import ProcesarMapas from "./ProcesarMapas";
+import { useForecast } from "../../context/ForecastContext"
 
 export default function GestorDescargas({ arrayDeUrls }) {
   const [status, setStatus] = useState("");
   const [progress, setProgress] = useState(0);
   const [temporalAdvertencia, setTemporalAdvertencia] = useState(false)
-  const [ultimaInfo, setUltimaInfo] = useState('')
+  const {ultimaInfo, setUltimaInfo} = useForecast()
 
   const handleDownload = async (ruta) => {
     setStatus("Descargando datos...");
@@ -68,7 +69,7 @@ useEffect(() => {
         {ultimaInfo && (<span>{ultimaInfo}</span>)}
          <ProcesarMapas></ProcesarMapas>
       <button 
-        className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 ml-[10px]"
+        className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 ml-2.5"
         onClick={() => handleDownload(v[0])}
       >
        

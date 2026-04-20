@@ -8,9 +8,11 @@ import matplotlib.colors as mcolors
 import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+import shutil
 
 BASE_DIR = r"D:\Armin\Salva Diaria\forecast-editer\forecast-editer\datos\gfs-wave"
-MAPAS_DIR = r"D:\Armin\Salva Diaria\forecast-editer\forecast-editer\src\Mapas"
+MAPAS_DIR = r"D:\Armin\Salva Diaria\forecast-editer\forecast-editer\public\Mapas"
+
 
 # Definir dominios (ejemplo, completa con todos)
 DOMINIOS = {
@@ -118,7 +120,7 @@ def plot_altura(ds, dominio, outpath, grupo, escala="redondeada"):
                            cmap="viridis", transform=ccrs.PlateCarree())
         plt.colorbar(im, ax=ax, orientation="horizontal", pad=0.05,)
     print("Guardando mapa en:", outpath)
-    plt.savefig(outpath, dpi=150)
+    plt.savefig(outpath, dpi=150, bbox_inches="tight", pad_inches=0)
     plt.close()
 '''
 def plot_viento(ds, dominio, outpath, grupo="Cuba"):
@@ -175,7 +177,7 @@ def plot_leva(ds, dominio, outpath, modo="color"):
         plt.colorbar(im, ax=ax, orientation="horizontal", pad=0.05)
         ax.quiver(u.longitude, u.latitude, u.values, v.values, transform=ccrs.PlateCarree(), scale=400)
     print("Guardando mapa en:", outpath)
-    plt.savefig(outpath, dpi=150)
+    plt.savefig(outpath, dpi=150, bbox_inches="tight", pad_inches=0)
     plt.close()
 
 def plot_altura_viento(ds, dominio, outpath, grupo="Cuba"):
@@ -209,7 +211,7 @@ def plot_altura_viento(ds, dominio, outpath, grupo="Cuba"):
                  u.values, v.values,
                  transform=ccrs.PlateCarree(), length=6)
     print("Guardando mapa en:", outpath)
-    plt.savefig(outpath, dpi=150)
+    plt.savefig(outpath, dpi=150, bbox_inches="tight", pad_inches=0)
     plt.close()
 
 def plot_periodo(ds, outpath):
@@ -230,7 +232,7 @@ def plot_periodo(ds, outpath):
                        cmap="plasma", transform=ccrs.PlateCarree(), shading="auto")
     plt.colorbar(im, ax=ax, orientation="horizontal", pad=0.05)
     print("Guardando mapa en:", outpath)
-    plt.savefig(outpath, dpi=150)
+    plt.savefig(outpath, dpi=150, bbox_inches="tight", pad_inches=0)
     plt.close()
 
 
@@ -238,6 +240,13 @@ def plot_periodo(ds, outpath):
 
 
 def main():
+    for item in os.listdir(MAPAS_DIR):
+        item_path = os.path.join(MAPAS_DIR, item)
+        
+        # Si es una carpeta, la elimina con todo su contenido
+        if os.path.isdir(item_path):
+            shutil.rmtree(item_path)
+            print(f"Carpeta eliminada: {item_path}")
     files = sorted(glob.glob(os.path.join(BASE_DIR, "*.grib2")))
     for f in files:
         ds = xr.open_dataset(f, engine="cfgrib")
