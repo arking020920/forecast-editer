@@ -199,11 +199,11 @@
   ],
   "armin.quintana": [
     {
-      "zona1": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4) que a finales de la mañana del día 21 aumentará hasta 28 - 37 km/h (fza 5).\nPoco oleaje con olas entre 0.5 - 1.0 metro (fza 3) que a finales de la noche aumentará hasta Oleaje con olas entre 1.0 - 1.5 metros (fza 4), llegando a Marejadas con olas entre 1.5 - 2.5 metros (fza 5) a mediados de la mañana del día 21.",
-      "zona2": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2) que a finales de la noche aumentará hasta Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
-      "zona3": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2) que en la noche aumentará a Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
-      "zona4": "Variable entre 10 - 19 km/h (fza 3), excepto al sur de Guantánamo donde estará del Noreste al Este entre 10 - 19 km/h (fza 3).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2), excepto al sureste de Guantánamo donde habrá Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3).",
-      "zona5": "Viento del Noreste al Este entre 19 - 28 km/h (fza 4).\nMar tranquila con olas inferiores o iguales a 0.5 metros (fzas 1 y 2) que en la madrugada aumentará hasta Poco oleaje con olas entre 0.5 - 1.0 metro (fza 3), llegando a Oleaje con olas entre 1.0 - 1.5 metros (fza 4) al sur de la península de Guanahacabibes y el archipiélago de los Canarreos. En los golfos de Batabanó, Ana María y Guacanayabo la mar permanecerá Tranquila con olas inferiores a 0.5 metros (fzas 1 y 2). En zonas de Oleaje y Marejadas la navegación será peligrosa para embarcaciones menores."
+      "zona1": "",
+      "zona2": "",
+      "zona3": "",
+      "zona4": "",
+      "zona5": ""
     },
     {
       "zona1": "",

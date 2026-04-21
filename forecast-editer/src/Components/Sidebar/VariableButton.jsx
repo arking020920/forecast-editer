@@ -12,6 +12,7 @@ import { arrayDeVariables, arrayDeZonasMapas, cOrM, objetoDeEscalas, } from "../
       setImagePath(`/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[tipo]}/${objetoDeEscalas[arrayDeVariables[tipo]][0]}/${fechasMapas}.jpeg`)
     }
     else if(tipo ===3){
+      setVariables(tipo)
       setImagePath(`/Mapas/${arrayDeVariables[tipo]}/${fechasMapas}.jpeg`)
     }
     setShowVariables(false)

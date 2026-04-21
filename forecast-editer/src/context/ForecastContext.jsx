@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { pronosticos } from "../data/pronosticos";
-
+import {arrayDeVariables, arrayDeZonasMapas, cOrM, objetoDeEscalas} from '../data/mapaUtils'
 // Creamos el contexto
 const ForecastContext = createContext();
 
 // Hook para usar el contexto
+
 export const useForecast = () => useContext(ForecastContext);
 
 // Proveedor global
@@ -29,8 +30,10 @@ export const ForecastProvider = ({ children }) => {
   const [cubaOrMarady, setCubaOrMarady] = useState(0)
   const [mapasZonas, setMapasZonas]=useState(0)
   const [variables, setVariables]=useState(0)
-  const [ultimaInfo, setUltimaInfo] = useState('')
-  const [fechasMapas, setFechasMapas] =useState('16.04.2026.06utc')
+  const [fechaPrimerArchivoCorrida, setFechaPrimerArchivoCorrida] = useState('')
+  const [fechasMapas, setFechasMapas] =useState('')
+  const [imagePath, setImagePath] = useState(`/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`) 
+  
   //const [pronosticoDatabase, setPronosticoDatabase] = useState({})
   const structure = []
   useEffect(()=>{
@@ -152,8 +155,10 @@ const handleLoad = async () => {
         setVariables,
         fechasMapas,
         setFechasMapas,
-        ultimaInfo,
-        setUltimaInfo
+        fechaPrimerArchivoCorrida,
+        setFechaPrimerArchivoCorrida,
+        imagePath,
+        setImagePath
       }}
     >
       {children}
