@@ -32,7 +32,7 @@ export default function ForecastModal({ onClose }) {
           {pronosticos[tipoDePronostico].map((key, index) => (
             <button
               key={index}
-              onClick={() => setSelected(key.id)}
+              onClick={() => {setSelected(key.id); setCurrentZone(0)}}
               className={`p-4 rounded-lg shadow-md text-left font-medium transition ${
                 selected === key.id
                   ? "bg-blue-500 text-white"

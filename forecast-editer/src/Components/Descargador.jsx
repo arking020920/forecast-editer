@@ -17,7 +17,7 @@ export default function Descargador() {
   const arrayDeUrls = [["http://localhost:5000/download-gfswave",'GFS-WAVE DATA','gfs-wave']];
 
   return (
-    <div className="grid grid-cols-2 gap-6 p-6 bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen">
+    <div className="grid grid-cols-2 gap-6 p-6 bg-linear-to-r from-blue-50 to-blue-100 min-h-screen">
       {/* Columna izquierda: gestor de descargas */}
       <GestorDescargas arrayDeUrls={arrayDeUrls} />
 

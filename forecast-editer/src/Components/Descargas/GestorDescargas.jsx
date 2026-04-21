@@ -7,8 +7,9 @@ export default function GestorDescargas({ arrayDeUrls }) {
   const [status, setStatus] = useState("");
   const [progress, setProgress] = useState(0);
   const [temporalAdvertencia, setTemporalAdvertencia] = useState(false)
-  const {ultimaInfo, setUltimaInfo} = useForecast()
-
+  const [ultimaInfo, setUltimaInfo] = useState('')
+  const {fechaPrimerArchivoCorrida,
+        setFechaPrimerArchivoCorrida, setFechasMapas} = useForecast()
   const handleDownload = async (ruta) => {
     setStatus("Descargando datos...");
     setProgress(0);
@@ -44,7 +45,8 @@ useEffect(() => {
       const respInfo = await fetch("http://localhost:5000/info-gfswave");
       const infoData = await respInfo.json();
       setUltimaInfo(JSON.stringify(infoData.message))
-
+      setFechaPrimerArchivoCorrida(infoData.fecha)
+      setFechasMapas(infoData.fecha.replace(/\//g, "."))
       // Aquí guardas el mensaje en un estado adicional
       setTemporalAdvertencia(false);
     } catch (err) {

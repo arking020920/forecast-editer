@@ -6,6 +6,7 @@ import ShortcutModal from "./ShortCutModal";
 import { replaceFunction } from "../hooks/useAAAListener";
 import { useTheme } from "../context/ToggleContext";
 import PronosticadorSelector from "./PronosticadorSelector";
+import {arrayDeVariables, arrayDeZonasMapas, cOrM, objetoDeEscalas} from '../data/mapaUtils'
 
 export default function Writer() {
   const {
@@ -20,7 +21,18 @@ export default function Writer() {
     setCurrentZone,
     shortcuts,
     tipoDePronostico,
-    selected
+    selected,
+    imagePath,
+    setImagePath,
+    cubaOrMarady,
+    setCubaOrMarady,
+    mapasZonas,
+    setMapasZonas,
+    variables,
+    setVariables,
+    fechasMapas,
+    setFechasMapas, 
+    fechaPrimerArchivoCorrida
   } = useForecast();
   const {isDay} = useTheme()
   const [openShortcut, setOpenShortcut] = useState(false);
@@ -49,16 +61,92 @@ export default function Writer() {
 
   // posición del cursor (caret) en el input/textarea
   const cursorPos = (e.target && typeof e.target.selectionStart === "number") ? e.target.selectionStart : actual.length;
-
+  const alternativeCorM = selected != 1 ? 0 : 1  
   bufferRef.current += e.key;
   if (bufferRef.current.length > 3) {
     bufferRef.current = bufferRef.current.slice(-3);
   }
+   function adelantarMes(fechaE, cant){
+    console.log(cant)
+    const [dia, mes, anio, horaUtc] = fechaE
+      .replace(/\//g, ".")
+      .replace("utc", "")
+      .split(".");
 
+    const diaNum = parseInt(dia, 10);
+    const mesNum = parseInt(mes, 10) - 1; // JS usa meses 0-11
+    const anioNum = parseInt(anio, 10);
+    const horaNum = parseInt(horaUtc, 10);
+
+    // Crear objeto Date en UTC
+    let fecha = new Date(Date.UTC(anioNum, mesNum, diaNum, horaNum));
+
+    // Sumar un día completo
+    fecha.setUTCDate(fecha.getUTCDate() + cant);
+
+    // Formatear de nuevo al estilo "dd.mm.yyyy.hhutc"
+    const dd = String(fecha.getUTCDate()).padStart(2, "0");
+    const mm = String(fecha.getUTCMonth()+1).padStart(2, "0");
+    const yyyy = fecha.getUTCFullYear();
+    const hh = String(fecha.getUTCHours()).padStart(2, "0");
+    console.log(dd,'el dia')
+    const newFecha = `${dd}.${mm}.${yyyy}.${hh}utc`;
+
+    // Actualizar estado
+    return newFecha
+   }
+   const cambioDeZona = (toForward) =>{
+      const signo = toForward ? 1 : -1
+      let newFecha = ''
+      if(variables !=3){
+      const cZone=currentZone-1
+      if([1,2,3].includes(selected) && currentZone+1*signo != 0 ){
+        setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][cZone+1*signo]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`)
+      } 
+      else if([1,2,3].includes(selected) && currentZone+1*signo == 0){
+        setImagePath('https://www.nhc.noaa.gov/tafb_latest/atlsfc48_latestBW.gif')
+      }
+      else if(selected ==0){
+        setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][currentZone+1*signo]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`)
+      }
+      else if(selected==4 && [0,6,12].includes(currentZone+1*signo)){
+        const hour = 24 + (Math.floor((currentZone+1*signo)/6))*24
+        setImagePath(`https://www.nhc.noaa.gov/tafb_latest/atlsfc${hour}_latestBW.gif`)
+        console.log(currentZone+1*signo)
+      }
+      else if(selected==4){
+        const TgfZone = (currentZone+1*signo)<6 ? currentZone+1*signo : (currentZone+1*signo) % 6
+        console.log(TgfZone,'tgf')
+        if(currentZone==6){
+          newFecha = adelantarMes(fechaPrimerArchivoCorrida,1)
+          setFechasMapas(newFecha)
+          setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][TgfZone-1]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${newFecha}.jpeg`)
+
+        }
+        else if (currentZone==12){
+          newFecha = adelantarMes(fechaPrimerArchivoCorrida,2)
+          setFechasMapas(newFecha)
+          setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][TgfZone-1]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${newFecha}.jpeg`)
+        }
+        else if(currentZone+1*signo==5){
+          setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][TgfZone-1]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechaPrimerArchivoCorrida}.jpeg`)
+        }
+        else{
+        
+        setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][TgfZone-1]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`)
+        }
+      }
+      }
+      setMapasZonas(currentZone+1*signo)
+      setCubaOrMarady(alternativeCorM)
+   } 
+  
+  
   // Avanzar a la siguiente zona con Ctrl + ArrowRight
 if (e.ctrlKey && e.key === "ArrowRight") {
   if (currentZone < zonas.length - 1) {
     setCurrentZone(currentZone + 1);
+    cambioDeZona(true)
   }
   e.preventDefault(); // evita que el navegador mueva el cursor
 }
@@ -66,7 +154,8 @@ if (e.ctrlKey && e.key === "ArrowRight") {
 // Retroceder a la zona anterior con Ctrl + ArrowLeft
 if (e.ctrlKey && e.key === "ArrowLeft") {
   if (currentZone > 0) {
-    setCurrentZone(currentZone - 1);
+    setCurrentZone(currentZone-1)
+    cambioDeZona(false) 
   }
 
   e.preventDefault();

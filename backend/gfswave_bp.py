@@ -96,6 +96,6 @@ def info_gfswave():
         mes_nombre = meses.get(mm, mm)
 
         mensaje = f"Los últimos datos descargados son del {dd} de {mes_nombre} del {yyyy} a las {hh} UTC."
-        return jsonify({"message": mensaje})
+        return jsonify({"message": mensaje, "fecha": f'{dd}/{mm}/{yyyy}/{hh}utc' })
     except Exception as e:
         return jsonify({"message": f"Error al leer info: {str(e)}"})

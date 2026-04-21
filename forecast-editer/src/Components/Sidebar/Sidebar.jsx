@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import FloatingBar from "./InfoBar";
 import ControlBar from "./ButtonBar";
 import { useForecast } from "../../context/ForecastContext";
@@ -15,8 +15,53 @@ export default function Sidebar() {
         mapasZonas,
         setMapasZonas,
         fechasMapas,
-        setFechasMapas, variables} =useForecast()
-  const [imagePath, setImagePath] = useState(`/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`) 
+        setFechasMapas, variables, fechaPrimerArchivoCorrida, setFechaPrimerArchivoCorrida, imagePath, setImagePath} =useForecast()
+  //const [imagePath, setImagePath] = useState(`/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`) 
+  
+  // Inicialización de dinamicFecha
+  const dinamicFecha = fechaPrimerArchivoCorrida && (fechaPrimerArchivoCorrida.trim() !== "" && !fechaPrimerArchivoCorrida.includes('NaN')) ? fechaPrimerArchivoCorrida : ''
+  const arrayParaMostrarNombresVariables = ['Altura significativa de la ola', 'Altura significativa de la ola + viento', 'Leva', 'Periodo de la ola']
+  let valor=''
+  useEffect(() => {
+  valor = localStorage.getItem("dinamicFecha");
+  // Convertir siempre a string seguro
+  const fechaStr = (dinamicFecha || "").toString().replace(/\//g, ".").trim();
+  // Expresión regular: dd.mm.yyyy.hhutc
+  const regex = /^\d{2}\.\d{2}\.\d{4}\.\d{2}utc$/;
+
+  if (fechaStr !== "" && !fechaStr.includes("NaN")) {
+    if (regex.test(fechaStr)) {
+      // Guardar si es válido
+      localStorage.setItem("dinamicFecha", fechaStr);
+      console.log("Valor válido:", fechaStr);
+    } else {
+      // Si no cumple el formato, eliminar
+      localStorage.removeItem("dinamicFecha");
+    }
+  } else {
+    console.log("No hay valor guardado o es vacío");
+  }
+}, [dinamicFecha]);
+
+useEffect(() => {
+  if (!fechasMapas && (dinamicFecha || valor)) {
+    // Convertir y limpiar el formato
+    const newfecha = ((dinamicFecha || valor) || "").toString().replace(/\//g, ".").trim();
+    console.log(newfecha,'aaa')
+    // Validar antes de usar
+    const regex = /^\d{2}\.\d{2}\.\d{4}\.\d{2}utc$/;
+    if (regex.test(newfecha)) {
+      setFechasMapas(newfecha);
+      setFechaPrimerArchivoCorrida(newfecha)
+      setImagePath(
+        `/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${newfecha}.jpeg`
+      );
+    } else {
+      console.log("Formato inválido en newfecha, no se actualiza rutas");
+    }
+  }
+}, []);
+
 
   //Funcion que cambia el tipo de variable
   
@@ -71,7 +116,7 @@ export default function Sidebar() {
       {/* Visualizador básico */}
       {!showModal && (
       <div className="mt-4 relative">
-        <FloatingBar tipoDato={'Altura Significativa'} fechaHora={'16 de abril'}></FloatingBar>
+        <FloatingBar tipoDato={arrayParaMostrarNombresVariables[variables]} fechaHora={fechasMapas ? fechasMapas : dinamicFecha}></FloatingBar>
         <img
           src={imagePath}
           alt="Mapa"
@@ -97,7 +142,7 @@ export default function Sidebar() {
             onMouseDown={onMouseDownDrag}
             className="cursor-move bg-gray-800 text-white p-2 flex justify-between"
           >
-           <FloatingBar tipoDato={'Altura Significativa'} fechaHora={'16 de abril'}></FloatingBar>
+           <FloatingBar tipoDato={arrayParaMostrarNombresVariables[variables]} fechaHora={fechasMapas ? fechasMapas : dinamicFecha}></FloatingBar>
            <ControlBar showModal={showModal} setShowModal={setShowModal} imagePath={imagePath} setImagePath={setImagePath}></ControlBar>
 
 
