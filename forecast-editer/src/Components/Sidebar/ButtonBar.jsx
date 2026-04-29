@@ -1,101 +1,59 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VariableButton } from "./VariableButton";
 import { useForecast } from "../../context/ForecastContext";
 import { arrayDeVariables, arrayDeZonasMapas, cOrM, objetoDeEscalas, } from "../../data/mapaUtils";
+import { usePreloadImages } from "../../hooks/usePreloadImages";
+import { desplazarFecha, compararFechas, diferenciaHoras } from "../../utils/calcularFecha";
 
 export default function ControlBar({setShowModal, ampliar=true, setImagePath}) {
   const [showVariables, setShowVariables] = useState(false);
   const {cubaOrMarady,
         mapasZonas,variables,
-        fechasMapas, setCubaOrMarady, setMapasZonas, ultimaInfo, setUltimaInfo, fechaPrimerArchivoCorrida, setFechaPrimerArchivoCorrida, setFechasMapas, selected, currentZone
+        fechasMapas, setCubaOrMarady, setMapasZonas, ultimaInfo, setUltimaInfo, fechaPrimerArchivoCorrida, setFechaPrimerArchivoCorrida, setFechasMapas, 
+        selected, currentZone,  setCurrentZone, cambioDeZona, zonas,pasoTemporal, isGFSState, setIsGFSState
         } =useForecast()
   const opacityZoneForward = arrayDeZonasMapas[cubaOrMarady].length-1 == mapasZonas ? 0.2 : 1
-  const opacityZoneBackward = 0 == mapasZonas ? 0.2 : 1
-  const changeCubaOrMarady=()=>{
-        const value =  cubaOrMarady ===0 ? 1 : 0
-        console.log(ultimaInfo)
-        if(mapasZonas>=5 && cubaOrMarady===1){
-          setMapasZonas(0)
-        setImagePath(`/Mapas/${cOrM[value]}/${arrayDeZonasMapas[value][0]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`)
-        setCubaOrMarady(value)
-        }
-        else{
-        setCubaOrMarady(value)
-        setImagePath(`/Mapas/${cOrM[value]}/${arrayDeZonasMapas[value][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`)
-        }}
-  const changeZone = (toForward) =>{
-    let actualZone = mapasZonas
-    if((toForward && mapasZonas+1>arrayDeZonasMapas[cubaOrMarady].length-1) || (!toForward && mapasZonas-1 <0)) return
+  const opacityZoneBackward = 0 == currentZone ? 0.2 : 1
+  const [opacityFechaForward, setOpacityFechaForward] = useState(1);
+  const [opacityFechaBackward, setOpacityFechaBackward] = useState(1);
   
-    if(toForward){
-      setMapasZonas(mapasZonas+1)
-      actualZone=actualZone+1
+useEffect(() => {
+  const forward = compararFechas(
+    desplazarFecha(fechasMapas, fechaPrimerArchivoCorrida),
+    desplazarFecha(fechaPrimerArchivoCorrida, fechaPrimerArchivoCorrida, true, 4, 'd')
+  ) === 1 ? 0.2 : 1;
+
+  const backward = compararFechas(
+    desplazarFecha(fechasMapas, fechaPrimerArchivoCorrida, false),
+    fechaPrimerArchivoCorrida
+  ) === -1 ? 0.2 : 1;
+
+  setOpacityFechaForward(forward);
+  setOpacityFechaBackward(backward);
+
+  console.log('Valores recalculados:', forward, backward);
+}, [fechaPrimerArchivoCorrida, fechasMapas]);
+  const showGFSOficialMap=()=>{
+    if(!isGFSState){
+      const diferenciaH = diferenciaHoras(fechaPrimerArchivoCorrida, fechasMapas)
+      const fin3h = Math.trunc(diferenciaH/3)*3
+      if(diferenciaH<=72){
+        let timestep = ''
+        if(fin3h < 10){
+          timestep=`00${fin3h}`
+          console.log(`http://mag.ncep.noaa.gov/data/gfs-wave/06/gfs-wave_west-atl_${timestep}_sig_wv_ht.gif`,'jjjjj')
+
+        }
+        else timestep=`0${fin3h}`
+        setImagePath(`http://mag.ncep.noaa.gov/data/gfs-wave/06/gfs-wave_west-atl_${timestep}_sig_wv_ht.gif`)
+      }}
+    else {
+      setImagePath(`/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`)
     }
-    else {setMapasZonas(mapasZonas-1)
-    actualZone=actualZone-1}
-    setImagePath(`/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][actualZone]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`)
+    setIsGFSState(!isGFSState)
     }
-  function pasoTemporal(haciaAdelante) {
-  // fechaStr ejemplo: "20.04.2026.03utc"
-  console.log(fechasMapas,'aaas')
-  const fechaStr = fechasMapas ? fechasMapas : fechaPrimerArchivoCorrida;
-  const [dia, mes, anio, horaUtc] = fechaStr
-    .replace(/\//g, ".")
-    .replace("utc", "")
-    .split(".");
-  const diaNum = parseInt(dia, 10);
-  const mesNum = parseInt(mes, 10) - 1; // JS usa meses 0-11
-  const anioNum = parseInt(anio, 10);
-  const horaNum = parseInt(horaUtc, 10);
 
-  // 2. Crear objeto Date en UTC
-  let fecha = new Date(Date.UTC(anioNum, mesNum, diaNum, horaNum));
-
-  // Fecha base (inicio de la corrida)
-  const [d0, m0, y0, h0] = fechaPrimerArchivoCorrida
-    .replace(/\//g, ".")
-    .replace("utc", "")
-    .split(".");
-  const fechaBase = new Date(Date.UTC(parseInt(y0), parseInt(m0) - 1, parseInt(d0), parseInt(h0)));
-
-  // Diferencia en horas respecto a la base
-  const diffHoras = (fecha.getTime() - fechaBase.getTime()) / (1000 * 60 * 60);
-
-  // 3. Sumar o restar una hora con restricciones
-  if (haciaAdelante) {
-    if (diffHoras < 96) {
-      fecha.setUTCHours(fecha.getUTCHours() + 1);
-    } else {
-      console.log("No se puede avanzar más de 97 horas desde la fecha base");
-      return; // salir sin actualizar
-    }
-  } else {
-    if (diffHoras > 0) {
-      fecha.setUTCHours(fecha.getUTCHours() - 1);
-    } else {
-      console.log("No se puede retroceder antes de la fecha base");
-      return; // salir sin actualizar
-    }
-  }
-
-  // 4. Formatear de nuevo al estilo "dd.mm.yyyy.hhutc"
-  const dd = String(fecha.getUTCDate()).padStart(2, "0");
-  const mm = String(fecha.getUTCMonth() + 1).padStart(2, "0");
-  const yyyy = fecha.getUTCFullYear();
-  const hh = String(fecha.getUTCHours()).padStart(2, "0");
-  const newFecha = `${dd}.${mm}.${yyyy}.${hh}utc`;
-
-  console.log(dd, mm, yyyy, hh, "asasas");
-  setFechasMapas(newFecha);
-  if(variables !=3){
-  setImagePath(
-    `/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${newFecha}.jpeg`
-  )}
-  else{
-    setImagePath(`/Mapas/${arrayDeVariables[3]}/${newFecha}.jpeg`)
-  };
-}
-
+  usePreloadImages(true)
   return (
     <>
     
@@ -108,22 +66,21 @@ export default function ControlBar({setShowModal, ampliar=true, setImagePath}) {
         transition-all duration-300
       "
     >
-      {(currentZone != 0 && (!selected==3 || ![0,6,12].includes(currentZone))) && (
+      {(!(([1,2,3].includes(selected) && currentZone == 0) || (selected==4 && [0,6,12].includes(currentZone))) && !isGFSState) && (
       <>
-      <button className="p-2 rounded hover:bg-gray-700 transition" onClick={()=> pasoTemporal(false)} title="Corrida anterior">
+      <button className="p-2 rounded hover:bg-gray-700 transition" style={{opacity:opacityFechaBackward}} onClick={()=> pasoTemporal(false)} title="Corrida anterior">
 
         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-      <button className="p-2 rounded hover:bg-gray-700 transition"  onClick={()=> pasoTemporal(true)} title="Corrida siguiente">
+      <button className="p-2 rounded hover:bg-gray-700 transition" style={{opacity:opacityFechaForward}}  onClick={()=> pasoTemporal(true)} title="Corrida siguiente">
         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>
       </>)}
-
-      {/* Botón Variables */}
+        {(!(([1,2,3].includes(selected) && currentZone == 0) || (selected==4 && [0,6,12].includes(currentZone))) && !isGFSState) && (
       <div className="relative">
       <button
   onClick={() => setShowVariables(!showVariables)}
@@ -138,7 +95,7 @@ export default function ControlBar({setShowModal, ampliar=true, setImagePath}) {
   title="Variables meteorológicas"
 ></button>
 
-        {showVariables && (
+        {showVariables  && (
           <div
             className="
               absolute top-full mt-2 left-0
@@ -153,7 +110,7 @@ export default function ControlBar({setShowModal, ampliar=true, setImagePath}) {
           
           </div>
         )}
-      </div>
+      </div>)}
         {ampliar &&(
           <div className="flex items-center">
         <button
@@ -163,26 +120,29 @@ export default function ControlBar({setShowModal, ampliar=true, setImagePath}) {
         >
           Ampliar
         </button></div>)}
+        
      {/* Flechas temporales */}
-      {variables !=3 && (
+     
+      {(variables !=3 && !isGFSState) && (
      <div className="flex">
-      <button className="p-2 rounded hover:bg-gray-700 transition" style={{opacity:opacityZoneBackward}} onClick={()=> changeZone(false)} title="Zona anterior">
-
+      <button className="p-2 rounded hover:bg-gray-700 transition" style={{opacity:opacityZoneBackward}} onClick={()=>cambioDeZona(false)} title="Zona anterior">
         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-      <button className="p-2 rounded hover:bg-gray-700 transition" style={{opacity:opacityZoneForward}} onClick={()=> changeZone(true)} title="Zona siguiente">
+      <button className="p-2 rounded hover:bg-gray-700 transition" style={{opacity:opacityZoneForward}} onClick={()=>cambioDeZona(true)} title="Zona siguiente">
         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>
           </div>)}
       {/* Botón Cuba/Mares */}
+      {!(([1,2,3].includes(selected) && currentZone == 0) || (selected==4 && [0,6,12].includes(currentZone))) && (
+        <>
       {variables !=3 && (
-      <button className="px-3 py-2 bg-purple-600 rounded hover:bg-purple-700 transition cursor-pointer" onClick={()=> changeCubaOrMarady()} title="Intercambia entre los mapas de Cuba y los de Mares Adyacentes">
-        {cubaOrMarady === 0 ? 'Cuba' : 'Marady'}
-      </button>)}
+      <button className="px-3 py-2 bg-purple-600 rounded hover:bg-purple-700 transition cursor-pointer" onClick={()=> showGFSOficialMap()} title={isGFSState ? 'Mapa Oficial' : 'Mapa con los datos procesados'}>
+        {isGFSState ? 'Oficial': 'Edit'}
+      </button>)}</>)}  
     </div></>
   );
 }

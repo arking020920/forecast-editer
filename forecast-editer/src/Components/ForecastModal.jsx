@@ -2,18 +2,37 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useForecast } from "../context/ForecastContext";
 import { pronosticos } from "../data/pronosticos";
+import {arrayDeVariables, arrayDeZonasMapas, cOrM, objetoDeEscalas} from '../data/mapaUtils'
+import { usePreloadImages } from "../hooks/usePreloadImages";
 
 export default function ForecastModal({ onClose }) {
-  const { setTipoDePronostico, tipoDePronostico, selected, setSelected, pronosticoDatabase, setContenido, contenido, setCurrentZone } = useForecast();
+  const { setTipoDePronostico, tipoDePronostico, selected, setSelected, pronosticoDatabase, setContenido, contenido, setCurrentZone,
+    cubaOrMarady, setCubaOrMarady, mapasZonas, setMapasZonas, variables, setVariables, fechasMapas, setFechasMapas, fechaPrimerArchivoCorrida, setImagePath
+   } = useForecast();
   const [visible, setVisible] = useState(false);
-
+ const route =`/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`
   // Animación de entrada
   useEffect(() => {
     setVisible(true);
   }, []);
-
+  usePreloadImages(true,cubaOrMarady,true)
   // Si no hay modal abierto, no renderizamos nada
   if (!onClose) return null;
+  const reloadImage = (id)=>{
+     if(id == 1){
+      setCubaOrMarady(1)
+      setImagePath('https://www.nhc.noaa.gov/tafb_latest/atlsfc48_latestBW.gif')
+     }
+     else if([2,3,4].includes(id)){
+      setImagePath('https://www.nhc.noaa.gov/tafb_latest/atlsfc48_latestBW.gif')
+     }
+     else{
+      setCubaOrMarady(0)
+      setImagePath(`/Mapas/${cOrM[0]}/${arrayDeZonasMapas[0][0]}/${arrayDeVariables[0]}/${objetoDeEscalas[arrayDeVariables[0]][0]}/${fechaPrimerArchivoCorrida}.jpeg`)
+     }
+     setMapasZonas(0)
+     setVariables(0)
+  }
 
   return createPortal(
     <div className="fixed top-0 left-0 w-[100vw] h-[100vh] z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm">
@@ -51,6 +70,7 @@ export default function ForecastModal({ onClose }) {
               setContenido(pronosticoDatabase[selected])
               setCurrentZone(0)
               console.log('el contenido',contenido)
+              reloadImage(selected)
               onClose(); // cerramos el modal
             }
           }}

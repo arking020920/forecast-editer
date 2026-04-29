@@ -33,6 +33,7 @@ export const ForecastProvider = ({ children }) => {
   const [fechaPrimerArchivoCorrida, setFechaPrimerArchivoCorrida] = useState('')
   const [fechasMapas, setFechasMapas] =useState('')
   const [imagePath, setImagePath] = useState(`/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`) 
+  const [isGFSState, setIsGFSState] = useState(false)
   
   //const [pronosticoDatabase, setPronosticoDatabase] = useState({})
   const structure = []
@@ -104,7 +105,131 @@ const handleLoad = async () => {
   }
 };
 
+const cambioDeZona = (toForward) =>{
+      const pronosticoActual = pronosticos[tipoDePronostico][selected]; 
+      const zonas = pronosticoActual.zonas
+      if(toForward){
+        if (currentZone < zonas.length - 1) {
+        setCurrentZone(currentZone + 1);}
+        else return
+      }
+      else{
+        if (currentZone > 0) {
+        setCurrentZone(currentZone-1)
+        }
+        else return
+      }
 
+      const signo = toForward ? 1 : -1
+      const alternativeCorM = selected != 1 ? 0 : 1  
+      let newFecha = ''
+      if(variables !=3){
+      const cZone=currentZone-1
+      if([1,2,3].includes(selected) && currentZone+1*signo != 0 ){
+        setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][cZone+1*signo]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`)
+      setMapasZonas(cZone+1*signo)
+      } 
+      else if([1,2,3].includes(selected) && currentZone+1*signo == 0){
+        setImagePath('https://www.nhc.noaa.gov/tafb_latest/atlsfc48_latestBW.gif')
+        setMapasZonas(0)
+      }
+      else if(selected ==0){
+        setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][currentZone+1*signo]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`)
+        setMapasZonas(currentZone+1*signo)
+
+      }
+      else if(selected==4 && [0,6,12].includes(currentZone+1*signo)){
+        const hour = 24 + (Math.floor((currentZone+1*signo)/6))*24
+        setImagePath(`https://www.nhc.noaa.gov/tafb_latest/atlsfc${hour}_latestBW.gif`)
+        setMapasZonas(0)
+        console.log(currentZone+1*signo)
+      }
+      else if(selected==4){
+        const TgfZone = (currentZone+1*signo)<6 ? currentZone+1*signo : (currentZone+1*signo) % 6
+        console.log(TgfZone,'tgf')
+        setMapasZonas(TgfZone-1)
+        if(currentZone==6){
+          newFecha = adelantarMes(fechaPrimerArchivoCorrida,1)
+          setFechasMapas(newFecha)
+          setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][TgfZone-1]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${newFecha}.jpeg`)
+
+        }
+        else if (currentZone==12){
+          newFecha = adelantarMes(fechaPrimerArchivoCorrida,2)
+          setFechasMapas(newFecha)
+          setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][TgfZone-1]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${newFecha}.jpeg`)
+        }
+        else if(currentZone+1*signo==5){
+          setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][TgfZone-1]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechaPrimerArchivoCorrida}.jpeg`)
+        }
+        else{
+        
+        setImagePath(`/Mapas/${cOrM[alternativeCorM]}/${arrayDeZonasMapas[alternativeCorM][TgfZone-1]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`)
+        }
+      }
+      }
+      setCubaOrMarady(alternativeCorM)
+   } 
+
+   function pasoTemporal(haciaAdelante) {
+     // fechaStr ejemplo: "20.04.2026.03utc"
+     const fechaStr = fechasMapas ? fechasMapas : fechaPrimerArchivoCorrida;
+     const [dia, mes, anio, horaUtc] = fechaStr
+       .replace(/\//g, ".")
+       .replace("utc", "")
+       .split(".");
+     const diaNum = parseInt(dia, 10);
+     const mesNum = parseInt(mes, 10) - 1; // JS usa meses 0-11
+     const anioNum = parseInt(anio, 10);
+     const horaNum = parseInt(horaUtc, 10);
+   
+     // 2. Crear objeto Date en UTC
+     let fecha = new Date(Date.UTC(anioNum, mesNum, diaNum, horaNum));
+   
+     // Fecha base (inicio de la corrida)
+     const [d0, m0, y0, h0] = fechaPrimerArchivoCorrida
+       .replace(/\//g, ".")
+       .replace("utc", "")
+       .split(".");
+     const fechaBase = new Date(Date.UTC(parseInt(y0), parseInt(m0) - 1, parseInt(d0), parseInt(h0)));
+   
+     // Diferencia en horas respecto a la base
+     const diffHoras = (fecha.getTime() - fechaBase.getTime()) / (1000 * 60 * 60);
+   
+     // 3. Sumar o restar una hora con restricciones
+     if (haciaAdelante) {
+       if (diffHoras < 96) {
+         fecha.setUTCHours(fecha.getUTCHours() + 1);
+       } else {
+         console.log("No se puede avanzar más de 97 horas desde la fecha base");
+         return; // salir sin actualizar
+       }
+     } else {
+       if (diffHoras > 0) {
+         fecha.setUTCHours(fecha.getUTCHours() - 1);
+       } else {
+         console.log("No se puede retroceder antes de la fecha base");
+         return; // salir sin actualizar
+       }
+     }
+   
+     // 4. Formatear de nuevo al estilo "dd.mm.yyyy.hhutc"
+     const dd = String(fecha.getUTCDate()).padStart(2, "0");
+     const mm = String(fecha.getUTCMonth() + 1).padStart(2, "0");
+     const yyyy = fecha.getUTCFullYear();
+     const hh = String(fecha.getUTCHours()).padStart(2, "0");
+     const newFecha = `${dd}.${mm}.${yyyy}.${hh}utc`;
+   
+     console.log(dd, mm, yyyy, hh, "asasas");
+     setFechasMapas(newFecha);
+     if(variables !=3){
+     setImagePath(
+       `/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${newFecha}.jpeg`
+     )}
+     else{
+       setImagePath(`/Mapas/${arrayDeVariables[3]}/${newFecha}.jpeg`)
+     };
+   }
 
   return (
     <ForecastContext.Provider
@@ -158,7 +283,7 @@ const handleLoad = async () => {
         fechaPrimerArchivoCorrida,
         setFechaPrimerArchivoCorrida,
         imagePath,
-        setImagePath
+        setImagePath, cambioDeZona, pasoTemporal, isGFSState, setIsGFSState
       }}
     >
       {children}
