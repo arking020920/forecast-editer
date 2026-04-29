@@ -1,4 +1,4 @@
-  import { useForecast } from "../../context/ForecastContext"
+import { useForecast } from "../../context/ForecastContext"
 import { arrayDeVariables, arrayDeZonasMapas, cOrM, objetoDeEscalas, } from "../../data/mapaUtils";
   export function VariableButton({ruta, tipo, setImagePath, setShowVariables}){
     const textArray=['Altura significativa de la ola redoneada a la escala del costa de Cuba', 'Altura significativa de la ola con vástagos de viento', 'Altura de la ola asociada al mar de leva', 'Periodo de la ola']

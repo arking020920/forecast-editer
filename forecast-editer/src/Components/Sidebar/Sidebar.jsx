@@ -15,7 +15,7 @@ export default function Sidebar() {
         mapasZonas,
         setMapasZonas,
         fechasMapas,
-        setFechasMapas, variables, fechaPrimerArchivoCorrida, setFechaPrimerArchivoCorrida, imagePath, setImagePath} =useForecast()
+        setFechasMapas, variables, fechaPrimerArchivoCorrida, setFechaPrimerArchivoCorrida, imagePath, setImagePath, selected, currentZone} =useForecast()
   //const [imagePath, setImagePath] = useState(`/Mapas/${cOrM[cubaOrMarady]}/${arrayDeZonasMapas[cubaOrMarady][mapasZonas]}/${arrayDeVariables[variables]}/${objetoDeEscalas[arrayDeVariables[variables]][0]}/${fechasMapas}.jpeg`) 
   
   // Inicialización de dinamicFecha
@@ -116,7 +116,10 @@ useEffect(() => {
       {/* Visualizador básico */}
       {!showModal && (
       <div className="mt-4 relative">
-        <FloatingBar tipoDato={arrayParaMostrarNombresVariables[variables]} fechaHora={fechasMapas ? fechasMapas : dinamicFecha}></FloatingBar>
+         {!(([1,2,3].includes(selected) && currentZone == 0) || (selected==4 && [0,6,12].includes(currentZone))) && (
+           <FloatingBar tipoDato={arrayParaMostrarNombresVariables[variables]} fechaHora={fechasMapas ? fechasMapas : dinamicFecha}></FloatingBar>)}
+            {(([1,2,3].includes(selected) && currentZone == 0) || (selected==4 && [0,6,12].includes(currentZone))) && (
+           <FloatingBar tipoDato={'Mapa Sinoptico'} fechaHora={''}></FloatingBar>)}
         <img
           src={imagePath}
           alt="Mapa"
@@ -142,8 +145,11 @@ useEffect(() => {
             onMouseDown={onMouseDownDrag}
             className="cursor-move bg-gray-800 text-white p-2 flex justify-between"
           >
-           <FloatingBar tipoDato={arrayParaMostrarNombresVariables[variables]} fechaHora={fechasMapas ? fechasMapas : dinamicFecha}></FloatingBar>
-           <ControlBar showModal={showModal} setShowModal={setShowModal} imagePath={imagePath} setImagePath={setImagePath}></ControlBar>
+            {!(([1,2,3].includes(selected) && currentZone == 0) || (selected==4 && [0,6,12].includes(currentZone))) && (
+           <FloatingBar tipoDato={arrayParaMostrarNombresVariables[variables]} fechaHora={fechasMapas ? fechasMapas : dinamicFecha}></FloatingBar>)}
+            {(([1,2,3].includes(selected) && currentZone == 0) || (selected==4 && [0,6,12].includes(currentZone))) && (
+           <FloatingBar tipoDato={'Mapa Sinoptico'} fechaHora={''}></FloatingBar>)}
+           <ControlBar showModal={showModal} setShowModal={setShowModal} imagePath={imagePath} setImagePath={setImagePath} ampliar={false}></ControlBar>
 
 
 
