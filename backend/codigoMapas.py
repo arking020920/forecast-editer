@@ -9,9 +9,13 @@ import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import shutil
+from config import BASE_DIR
+from config import MAPAS_DIR
 
-BASE_DIR = r"D:\Armin\Salva Diaria\forecast-editer\forecast-editer\datos\gfs-wave"
-MAPAS_DIR = r"D:\Armin\Salva Diaria\forecast-editer\forecast-editer\public\Mapas"
+
+BASE_DIR = BASE_DIR + "\gfs-wave"
+if not os.path.exists(MAPAS_DIR):
+    os.makedirs(MAPAS_DIR, exist_ok=True)
 
 
 # Definir dominios (ejemplo, completa con todos)

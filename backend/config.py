@@ -6,6 +6,10 @@ CONFIG_DIR = os.path.join(os.path.dirname(__file__), "user_configs")
 
 os.makedirs(CONFIG_DIR, exist_ok=True)
 
+BASE_DIR = r"D:\Armin\Datos Sinoptica\forecast-editer\forecast-editer\forecast-editer\datos"
+MAPAS_DIR = r"D:\Armin\Datos Sinoptica\forecast-editer\forecast-editer\forecast-editer\public\Mapas"
+
+
 @config_bp.route("/config/<username>", methods=["GET"])
 def get_config(username):
     path = os.path.join(CONFIG_DIR, f"{username}.json")

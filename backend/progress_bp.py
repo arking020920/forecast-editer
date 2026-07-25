@@ -1,11 +1,10 @@
 # progress_bp.py
 from flask import Blueprint, jsonify, request
 import os
-
+from config import BASE_DIR
 progress_bp = Blueprint("progress", __name__)
 
-# Ruta base donde se guardan los datos
-BASE_DIR = r"D:\Armin\Salva Diaria\forecast-editer\forecast-editer\datos"
+
 
 @progress_bp.route("/progress", methods=["GET"])
 def check_progress():
