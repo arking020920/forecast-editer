@@ -3,11 +3,12 @@ from flask import Blueprint, jsonify
 import os
 import requests
 from datetime import datetime
+from config import BASE_DIR
+BASE_DIR = BASE_DIR + "\gfs-wave"
 
 gfswave_bp = Blueprint("gfswave", __name__)
 
 # Carpeta destino
-BASE_DIR = r"D:\Armin\Salva Diaria\forecast-editer\forecast-editer\datos\gfs-wave"
 os.makedirs(BASE_DIR, exist_ok=True)
 
 @gfswave_bp.route("/download-gfswave", methods=["GET"])
