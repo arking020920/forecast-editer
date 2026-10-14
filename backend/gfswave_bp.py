@@ -29,11 +29,56 @@ def download_gfswave():
             "https": "http://alejandro.rodriguez:Oleaje2016@10.0.100.191:3128",
         }
 
+        proxyAvailable=True  
+
+        def get_with_fallback(url, stream=False, time=10):
+            nonlocal proxyAvailable
+            if(proxyAvailable):
+                try:
+                    # Primer intento: con proxy
+                    return requests.get(
+                        url,
+                        stream=stream,
+                        timeout=time,
+                        proxies=proxies
+                    )
+
+                except (
+                    requests.exceptions.ProxyError,
+                    requests.exceptions.ConnectTimeout,
+                    requests.exceptions.ConnectionError,
+                    requests.exceptions.ReadTimeout
+                ):
+                    print("Proxy no disponible, intentando sin proxy...")
+                    proxyAvailable=False
+                    session = requests.Session()
+                    session.trust_env = False
+
+                    return session.get(
+                        url,
+                        stream=stream,
+                        timeout=time
+                    )
+            else:
+                session = requests.Session()
+                session.trust_env = False
+                
+                return session.get(
+                     url,
+                     stream=stream,
+                    timeout=time
+                    )
+        
         # Detectar ciclo válido
         for cycle in cycles:
             test_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.{date_str}/{cycle}/wave/gridded/gfswave.t{cycle}z.atlocn.0p16.f000.grib2"
             print(test_url)
-            resp = requests.get(test_url, stream=True, timeout=10, proxies=proxies)
+            resp = get_with_fallback(test_url)
+            #resp = requests.get(test_url, stream=True, timeout=10, proxies=proxies)
+            #session = requests.Session()
+            #session.trust_env = False
+            #resp = requests.get(test_url, stream=True, timeout=100)
+            #resp = session.get(test_url, stream=True, timeout=10)
             if resp.status_code == 200:
                 print(cycle, 'el ciclo')
                 chosen_cycle = cycle
@@ -44,11 +89,16 @@ def download_gfswave():
 
         total_files = 96  # 4 días = 96 horas / 3h = 32 archivos
         downloaded_files = []
-
+        #chosen_cycle='06'
         for idx, i in enumerate(range(0, 97)):
             f_str = str(i).zfill(3)
             url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.{date_str}/{chosen_cycle}/wave/gridded/gfswave.t{chosen_cycle}z.atlocn.0p16.f{f_str}.grib2"
-            resp = requests.get(url, stream=True, timeout=10, proxies=proxies)
+            resp = get_with_fallback(url)
+            #resp = requests.get(url, stream=True, timeout=10, proxies=proxies)
+            #session = requests.Session()
+            #session.trust_env = False
+            #resp = requests.get(url, stream=False, timeout=1000)
+            #resp = session.get(url, stream=False, timeout=10)
 
             if resp.status_code == 200:
                 filename = f"{f_str}.gfs.wave.extension.grib2"
