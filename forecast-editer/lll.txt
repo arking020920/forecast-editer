@@ -1,0 +1,1 @@
+start "Vite Frontend" cmd /k "cd /d D:\armin\forecast-editer\forecast-editer\forecast-editer && npm run dev"

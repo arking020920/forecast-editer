@@ -71,4 +71,9 @@ docx2txt
 regex
 chardet
 pysmb
-
+Flask 
+flask-cors 
+flask-jwt-extended 
+requests 
+python-dotenv
+reportlab
